@@ -28,7 +28,7 @@ export function Logo({ className = "h-9 w-auto" }: LogoProps) {
   return (
     <span className="inline-flex">
       <Image
-        src="/logo-light.png"
+        src="/logo/logo-light.png"
         alt=""
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
@@ -36,7 +36,7 @@ export function Logo({ className = "h-9 w-auto" }: LogoProps) {
         priority
       />
       <Image
-        src="/logo-dark.png"
+        src="/logo/logo-dark.png"
         alt=""
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
@@ -44,7 +44,7 @@ export function Logo({ className = "h-9 w-auto" }: LogoProps) {
         priority
       />
       <Image
-        src="/logo-read.png"
+        src="/logo/logo-read.png"
         alt=""
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
