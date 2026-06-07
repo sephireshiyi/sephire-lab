@@ -3,6 +3,7 @@
 @theme inline {
   --font-sans: var(--font-maven-pro);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-noto-serif-sc), serif;  /* 博客正文宋体；变量在 /blog 子树局部挂载 */
 }
 
 /*
@@ -98,4 +99,117 @@ body {
 .reader code {
   background: #e8e4d9;
   color: #5d4e37;
+}
+
+/* ════════════════════════════════════════════════════════════════
+ * 博客正文（MDX）排版 —— 集中在 .mdx-body 作用域
+ * 三主题颜色复用已有的 --text-* / --border-color / --bg-* 变量；
+ * 代码块语法色由 Shiki 注入的 --shiki-light/dark/reader 变量驱动。
+ * （Tailwind preflight 已清零各元素默认 margin，垂直间距完全由这里控制。）
+ * ════════════════════════════════════════════════════════════════ */
+
+.mdx-body {
+  line-height: 1.8; /* 长文舒适行高（font-decisions §5 决策 4）*/
+}
+
+/* 块级元素之间的垂直节奏（首元素无上边距，靠相邻兄弟选择器实现） */
+.mdx-body > * + * {
+  margin-top: var(--spacing-lg);
+}
+
+.mdx-body h2 {
+  margin-top: var(--spacing-3xl);
+  font-size: 1.5rem;
+  font-weight: 700;
+  scroll-margin-top: var(--header-height); /* 锚点跳转时标题不被固定页眉遮住 */
+}
+
+.mdx-body h3 {
+  margin-top: var(--spacing-2xl);
+  font-size: 1.25rem;
+  font-weight: 600;
+  scroll-margin-top: var(--header-height);
+}
+
+.mdx-body ul,
+.mdx-body ol {
+  padding-left: var(--spacing-lg);
+}
+.mdx-body ul {
+  list-style: disc;
+}
+.mdx-body ol {
+  list-style: decimal;
+}
+.mdx-body li + li {
+  margin-top: var(--spacing-2xs);
+}
+
+.mdx-body blockquote {
+  padding-left: var(--spacing-md);
+  border-left: 3px solid var(--border-color);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* 正文链接 */
+.mdx-body a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.mdx-body a:hover {
+  color: var(--text-secondary);
+}
+
+/* 标题里的锚点链接（rehype-autolink-headings 生成的隐藏 <a>）：跟随标题、不显示成正文链接 */
+.mdx-body :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 行内 code（不在 pre 里）：小药丸样式 */
+.mdx-body :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 0.3em;
+  font-size: 0.9em;
+  font-family: var(--font-mono), monospace;
+  background: var(--bg-hover);
+}
+
+/* ── 代码块（rehype-pretty-code 输出 <figure><pre><code>…）── */
+.mdx-body figure[data-rehype-pretty-code-figure] {
+  margin: 0; /* 外层 figure 不额外占间距，交给上面的 > * + * */
+}
+.mdx-body pre {
+  margin: 0;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  background: var(--bg-secondary); /* keepBackground:false → 背景由主题 token 决定 */
+}
+.mdx-body pre code {
+  background: transparent; /* 底色在 pre 上，块内 code 自身透明 */
+  font-family: var(--font-mono), monospace;
+}
+
+/* Shiki 多主题：每个 token <span> 自带 --shiki-light/dark/reader 三套色，
+ * 这里按 <html> 上的主题 class 把对应变量映射到 color。light 默认，.dark/.reader 覆盖。 */
+.mdx-body pre code,
+.mdx-body pre code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style, normal);
+}
+.dark .mdx-body pre code,
+.dark .mdx-body pre code span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
+}
+.reader .mdx-body pre code,
+.reader .mdx-body pre code span {
+  color: var(--shiki-reader);
+  font-style: var(--shiki-reader-font-style, normal);
 }

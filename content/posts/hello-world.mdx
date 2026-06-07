@@ -1,0 +1,46 @@
+---
+type: "post"
+title: "你好，世界：博客管线的第一次贯通"
+date: "2026-06-07"
+category: "tech"
+tags: ["mdx", "next.js", "tracer-bullet"]
+summary: "用一篇覆盖各种元素的金丝雀文章，验证 MDX → Shiki 高亮 → 宋体正文 → 三主题 的端到端渲染。"
+---
+
+这是 Sephire Lab 博客系统的第一篇文章，作用是 **金丝雀（canary）**：把 Markdown 里常见的元素都铺一遍，确认渲染管线（编译、代码高亮、宋体正文、三主题切换）都正常工作。如果这一页显示正确，就说明 tracer bullet 打通了。
+
+## 二级标题：中英文混排测试
+
+正文里夹杂一点 *English text* 和 **加粗的中文**，用来检验中英文在 Noto Serif SC（思源宋体）下是否统一为衬线、阅读时是否割裂。行内代码长这样：`const answer = 42`，再来一个文件路径 `lib/content.ts`。
+
+### 三级标题：代码块
+
+下面是一个 JavaScript 代码块，应当带 Shiki 语法高亮，并且在 light / dark / reader 三个主题间换色：
+
+```js
+// 一个简单的斐波那契实现
+function fib(n) {
+  if (n < 2) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+
+console.log(fib(10)); // 55
+```
+
+> 这是一段引用（blockquote）。极简、留白、动效轻、阅读优先——这是 Sephire Lab 的设计原则。
+
+## 列表与链接
+
+无序列表：
+
+- 编译用 `@next/mdx`（官方插件，build 时编译为 React 组件）
+- frontmatter 用 gray-matter 读取、用 zod 在构建时校验
+- 代码高亮用 rehype-pretty-code（Shiki 内核，多主题）
+
+有序列表：
+
+1. 装依赖
+2. 配置管线
+3. 跑通一篇
+
+最后放一个 [外部链接](https://nextjs.org/docs/app/guides/mdx) 测试链接样式，再用一整行中文检验段落行高与换行密度：一二三四五六七八九十，十九八七六五四三二一。
