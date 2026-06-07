@@ -468,3 +468,65 @@
 ### 下一步建议
 
 按 Milestone 顺序进入 MDX 博客系统（task4 待规划）。也可以先处理用户记录的渲染时机问题。
+
+## 2026-06-07 15:25 (task4)
+
+### 本轮目标
+
+Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑通——MDX 编译 + frontmatter zod 校验 + Shiki 代码高亮 + 思源宋体正文 + 三主题。先不做列表页/筛选（切片 B/C）。按 `mdx-pipeline-decisions.md` §11 切片 A 逐步实施。
+
+### 修改文件
+
+- `package.json` / `pnpm-lock.yaml`（装 MDX 依赖）
+- `next.config.ts`（`createMDX` 包裹 + remark/rehype 管线）
+- `mdx-components.tsx`（**新建**，项目根，@next/mdx 在 App Router 下必须有）
+- `content/posts/hello-world.mdx`（**新建**，金丝雀示例文章）
+- `lib/content.ts`（**新建**，zod `PostSchema` + `parsePost` / `getPostSlugs` / `getPostBySlug`）
+- `app/blog/[slug]/page.tsx`（**新建**，详情页：generateStaticParams + 动态 import + frontmatter 标题区）
+- `app/blog/layout.tsx`（**新建**，局部挂载思源宋体变量）
+- `lib/fonts.ts`（`notoSerifSC` 的 `weight` 改 `"variable"`；`fontVariables` 仍不含它）
+- `app/globals.css`（`@theme inline` 加 `--font-serif`；新增 `.mdx-body` 正文排版 + Shiki 三主题 CSS）
+
+### 新增依赖（理由集中见 `mdx-pipeline-decisions.md` §2/§4/§5，此处只列用途）
+
+| 依赖 | 版本 | 用途 |
+|---|---|---|
+| `@next/mdx` | **16.2.5**（对齐 Next，registry 最新是 16.2.7） | 官方 MDX 编译，build 时编译为 RSC |
+| `@mdx-js/loader` / `@mdx-js/react` | 3.1.1 | MDX 核心 loader / runtime |
+| `@types/mdx` | 2.0.14（dev） | `.mdx` 模块类型 |
+| `gray-matter` | 4.0.3 | 只读 YAML frontmatter（不编译正文） |
+| `zod` | 4.4.3 | build 时校验 frontmatter（zod 4 API：`z.iso.date()` / `z.prettifyError()`） |
+| `remark-gfm` | 4.0.1 | 表格/删除线/任务列表/自动链接 |
+| `remark-frontmatter` | 5.0.0 | **剥离** YAML frontmatter（详见下方实施反馈①） |
+| `rehype-pretty-code` | 0.14.3 | 代码高亮（Shiki 内核，多主题 CSS 变量） |
+| `shiki` | 4.2.0 | rehype-pretty-code 的 **peerDependency**，需显式装（实施反馈②） |
+| `rehype-slug` / `rehype-autolink-headings` | 6.0.0 / 7.1.0 | 标题 id + 锚点链接 |
+
+装包前按 §8 跑了 `npm view` 核对版本：zod 确为 4.x（按 zod 4 文档写）、`@next/mdx@16.2.5` 存在、`rehype-pretty-code@0.14.3` 的 peer `shiki ^1||^2||^3||^4` 覆盖 4.2.0。
+
+### 完成内容
+
+- **MDX 管线**：`next.config.ts` 用 `createMDX` 包裹，`pageExtensions` 加 md/mdx；Turbopack 约束下插件全部用**字符串名 + 可序列化选项**（核对 Next 16.2.5 离线文档 `node_modules/next/dist/docs/01-app/02-guides/mdx.md` 确认语法）。remark：`remark-frontmatter` → `remark-gfm`；rehype：`rehype-slug` → `rehype-autolink-headings` → `rehype-pretty-code`。
+- **代码高亮三主题**：`theme: { light: github-light, dark: github-dark, reader: rose-pine-dawn }` + `keepBackground:false`。核对生成 HTML：每个 token `<span>` 带 `--shiki-light/dark/reader` 三套变量、`<pre>` 无内联背景。`globals.css` 按 `<html>` 的 `.dark`/`.reader` class 把对应变量映射到 `color`。
+- **frontmatter 单一事实源**：`lib/content.ts` 的 zod `PostSchema` 定义一次，`Post` 由 `z.infer` 派生；`parsePost` 用 gray-matter 读 + `safeParse`，失败抛错并 `z.prettifyError` 指名文件与字段。
+- **字体**：`weight:"variable"`（核对 next/font 的 `font-data.json` 确认 Noto Serif SC 有 wght 200–900 可变轴）；变量只在 `app/blog/layout.tsx` 的 `<div>` 局部挂载，`<html>` 仍只挂 Maven Pro + Geist Mono（已核对生成 HTML）。
+
+### 验证方式
+
+- `pnpm build` 绿：`/blog/[slug]` 标记 `● (SSG)`，`/blog/hello-world` 预渲染为静态 HTML；TypeScript 检查通过（build 内含 tsc）。
+- 核对生成 HTML（`.next/server/app/blog/hello-world.html`）：frontmatter 已剥离（无 `type:"post"` 文本）、Shiki 三变量齐全、`mdx-body` 结构正常。
+- **zod 生效验证**：故意删掉示例文章 `date` → `pnpm build` 直接失败（exit 1）：`Invalid frontmatter in /Users/.../hello-world.mdx ✖ Invalid input: expected string, received undefined → at date`，并 `exiting the build`。已恢复 date，再 build 转绿。
+- dev server（:3000）curl `/blog/hello-world`：HTTP 200，标题/正文/高亮/`font-serif`/局部宋体变量均在位。
+
+### 遗留问题 / 实施反馈（给架构师）
+
+1. **【实施反馈】§6 管线图 + §7 依赖清单缺 `remark-frontmatter`**。`@next/mdx` 默认不处理 frontmatter（离线文档明确写 "does **not** support frontmatter by default"）：gray-matter 只负责"读"，详情页动态 import 的 `.mdx` 正文里那段 `---…---` 若不剥离，会被当成 `<hr>` + 文本渲染出来。已加 `remark-frontmatter` 解决。建议架构师把它补进 §6/§7。
+2. **【实施反馈】§7 把 shiki 视作 rehype-pretty-code "自带"，但 shiki 实为其 peerDependency**，需显式安装（已显式装 `shiki@4.2.0`）。
+3. **reader 的 Shiki 主题**（§10 未决项 1）定为 `rose-pine-dawn`（暖色，贴合 reader 米色背景）——初步选择，可后续对照设计稿调。
+4. **mdx-components.tsx 走"最小实现"**，正文排版集中在 `globals.css` 的 `.mdx-body`，与架构文档"给 pre/code/h2 挂 Tailwind 类"措辞略有出入。理由：与既有 `.reader article` CSS 同体系、后代选择器能干净处理"标题里的锚点链接"和"行内 code vs 代码块 code"，对学习者更连贯（少一套并行机制）。需要用 React 组件替换元素（如 `<img>`→`next/image`）时再往 mdx-components 加。
+5. **三主题视觉切换需人工过目**：机制已验证（三套 shiki 变量 + CSS 按 `.dark`/`.reader` 切换 + next-themes 设 class），但 light/dark/reader 的像素级效果请在浏览器点一遍确认。
+6. **标题锚点**目前是隐藏空 `<a>`（autolink 默认 prepend），"hover 显示 #" 的视觉留待 §10 未决项 2（切片 C）。
+
+### 下一步建议
+
+切片 B（列表页 `/blog`）：`fs` 扫 `content/posts/` + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按日期排序 → 卡片列表；首页"最近文章"复用同一读取入口。`lib/content.ts` 已备好 `getPostSlugs`，可加 `getAllPosts()`。

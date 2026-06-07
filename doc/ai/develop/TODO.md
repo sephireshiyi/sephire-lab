@@ -24,12 +24,12 @@
 - [ ] 添加 reader 主题
 - [ ] 使用 CSS variables 管理主题颜色
 3. MDX 博客
-- [ ] 创建 `content/posts`
-- [ ] 添加第一篇 MDX 文章
-- [ ] 实现读取文章元信息
+- [x] 创建 `content/posts`
+- [x] 添加第一篇 MDX 文章
+- [x] 实现读取文章元信息
 - [ ] 实现 `/blog` 文章列表
-- [ ] 实现 `/blog/[slug]` 文章详情
-- [ ] 添加代码高亮
+- [x] 实现 `/blog/[slug]` 文章详情
+- [x] 添加代码高亮
 - [ ] 添加标签显示
 4. 项目展示
 - [ ] 创建项目数据结构
@@ -140,6 +140,37 @@
 - HUI v2 用 `data-[focus]`、`data-[closed]` 等数据属性配合 Tailwind 实现状态样式
 - iconify 图标在同一 px 尺寸下视觉大小不一致，需要 per-icon 调整
 - 多个不等宽元素并列时，加一个**固定尺寸槽位**容器是 flex 对齐的常用手段
+
+---
+
+### task4
+
+> ✅ 已完成：Milestone 3 切片 A（tracer bullet）——单篇博客文章端到端跑通
+
+**范围**：只做"单篇贯通"，列表页/筛选/标签 UI 留给切片 B/C。详细 LOG 见 `LOG.md` 2026-06-07 (task4)。
+
+**完成内容**：
+
+- 接入 MDX 管线：`next.config.ts`（`createMDX` + Turbopack 字符串插件）+ 根 `mdx-components.tsx`（必须文件）
+- `lib/content.ts`：zod `PostSchema`（单一事实源，`z.infer` 派生 `Post`）+ `parsePost` / `getPostSlugs` / `getPostBySlug`
+- `app/blog/[slug]/page.tsx`：`generateStaticParams` + `dynamicParams=false` + 动态 `import()` 正文 + zod 校验过的标题区
+- `app/blog/layout.tsx`：局部挂载思源宋体变量（不上 `<html>`）
+- `content/posts/hello-world.mdx`：覆盖各元素的金丝雀文章
+- 代码高亮 rehype-pretty-code + Shiki 三主题（light=github-light / dark=github-dark / reader=rose-pine-dawn），`globals.css` 加 `--font-serif` token + `.mdx-body` 排版 + Shiki 变量映射
+
+**关键决策 / 学习**：
+
+- Turbopack 下 remark/rehype 插件只能传字符串名 + 可序列化选项（函数传不进 Rust 侧）
+- `@next/mdx` 默认不剥离 frontmatter → 必须加 `remark-frontmatter`，否则 `---` 块渲染成 `<hr>`+文本（架构文档清单遗漏，已在 LOG 反馈）
+- shiki 是 rehype-pretty-code 的 peerDependency，需显式装
+- zod 4 API 与 zod 3 不同：`z.iso.date()` / `z.prettifyError()`，build 时校验失败会指名文件+字段并中断构建
+- Noto Serif SC 在 next/font 里是可变字体（wght 200–900），`weight:"variable"` 一个轴覆盖所有字重
+
+**待办（后续切片）**：
+
+- 切片 B：列表页 `/blog`（fs 扫目录 + gray-matter 只读 + 排序 → 卡片）；首页"最近文章"复用
+- 切片 C：category/tag 筛选、标签 chip 显示、标题锚点 hover 显示 #、`<img>`→`next/image`
+- reader 的 Shiki 主题名、三主题视觉切换的人工过目
 
 ---
 
