@@ -27,7 +27,7 @@
 - [x] 创建 `content/posts`
 - [x] 添加第一篇 MDX 文章
 - [x] 实现读取文章元信息
-- [ ] 实现 `/blog` 文章列表
+- [x] 实现 `/blog` 文章列表
 - [x] 实现 `/blog/[slug]` 文章详情
 - [x] 添加代码高亮
 - [ ] 添加标签显示
@@ -171,6 +171,33 @@
 - 切片 B：列表页 `/blog`（fs 扫目录 + gray-matter 只读 + 排序 → 卡片）；首页"最近文章"复用
 - 切片 C：category/tag 筛选、标签 chip 显示、标题锚点 hover 显示 #、`<img>`→`next/image`
 - reader 的 Shiki 主题名、三主题视觉切换的人工过目
+
+---
+
+### task5
+
+> ✅ 已完成：Milestone 3 切片 B（列表页）—— `/blog` 文章列表
+
+**范围**：实现列表页 `/blog`，显示所有文章按日期降序，暂不做筛选/分页/标签显示（切片 C）。详细 LOG 见 `LOG.md` 2026-06-13 (task5)。
+
+**完成内容**：
+
+- `lib/content.ts` 新增 `getAllPosts()` 函数：复用 `getPostSlugs()` + `parsePost()`，扫目录 + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按 `date` 降序排序
+- `app/blog/page.tsx`（新建）：列表页，调 `getAllPosts()` 渲染卡片（标题链接、日期格式化、category chip、summary），空状态处理
+- category 枚举到中文映射（临时在页面内，后续可抽到 `lib/constants.ts`）
+
+**验证**：
+
+- `/blog` 访问正常（HTTP 200），1 张卡片渲染正确
+- 点击标题 → 跳转到详情页
+- 排序逻辑验证：临时创建第二篇早期文章，确认降序正确（新文章在前）
+
+**待办（后续切片 C）**：
+
+- category/tag 筛选
+- 标签 chip 显示
+- 分页（文章多时）
+- 首页"最近文章"区复用 `getAllPosts().slice(0,3)`
 
 ---
 

@@ -7,6 +7,8 @@
 > **更新历史**：
 > - 2026-06-06：初版。基于研究工作流（5 维度并行核查 + 对抗式验证）产出推荐栈。
 > - 2026-06-06：用户确认 zod + tracer-bullet 切片，状态转"已确认"，新增 §11 首切片实施计划。
+> - 2026-06-07：据 developer 切片 A 实施反馈补正——§6/§7 补 `remark-frontmatter`（@next/mdx 不自动剥离 frontmatter），§7 补 `shiki`（rehype-pretty-code 的 peerDependency，需显式装）。
+> - 2026-06-13：据 reviewer RF-1 正式采纳"`.mdx-body` 集中 CSS + mdx-components 最小化"为官方排版范式，更新 §6 措辞。
 >
 > **可信度说明**：本文档结论分两档——
 > - 🟢 **已核实**：对照 `node_modules/next@16.2.5` 自带的离线官方文档、next/font loader 源码、或 GitHub 实时仓库验证过。对锁定版本而言是权威来源。
@@ -149,11 +151,13 @@ content/posts/*.mdx
    ├─ 列表页：fs.readdir + gray-matter（只读 frontmatter）+ zod 校验 → 排序 → 卡片列表
    │
    └─ 详情页：动态 import(.mdx)
-          │  remark 阶段：remark-gfm
+          │  remark 阶段：remark-frontmatter → remark-gfm
           │  rehype 阶段：rehype-slug → rehype-autolink-headings → rehype-pretty-code
           ↓
        Server Component 渲染（无 "use client"），font-serif 包裹正文
 ```
+
+> ⚠️ **`remark-frontmatter` 必须有**（2026-06-07 据 developer 实施反馈补）：`@next/mdx` 默认**不剥离** frontmatter。详情页动态 import 的 `.mdx`，其正文里那段 `---…---` 若不剥离，会被当成 `<hr>` + 文本渲染出来。`remark-frontmatter` 负责在编译时把它从正文里剥掉（gray-matter 只负责"读"出来给列表/标题用，两者职责不同、都需要）。
 
 `next.config.mjs`（🟢 必须 `.mjs` 或 `.ts`——remark/rehype 生态是 ESM-only）：
 
@@ -163,7 +167,7 @@ import createMDX from "@next/mdx";
 const withMDX = createMDX({
   options: {
     // ⚠️ Turbopack 下用字符串名 + 可序列化选项
-    remarkPlugins: ["remark-gfm"],
+    remarkPlugins: ["remark-frontmatter", "remark-gfm"],
     rehypePlugins: [
       "rehype-slug",
       ["rehype-pretty-code", { theme: { light: "github-light", dark: "github-dark", reader: "..." }, keepBackground: false }],
@@ -178,7 +182,7 @@ const nextConfig = {
 export default withMDX(nextConfig);
 ```
 
-🟢 **必须有 `mdx-components.tsx`（项目根）**——`@next/mdx` 在 App Router 下没有它会静默失效。导出一个 `useMDXComponents()`（无参数，签名照 Next 16.2.5 文档），在这里给 `pre`/`code`/`img`/`h2` 等挂 Tailwind 类。
+🟢 **必须有 `mdx-components.tsx`（项目根）**——`@next/mdx` 在 App Router 下没有它会静默失效。导出一个 `useMDXComponents()`（无参数，签名照 Next 16.2.5 文档）。**排版策略**：采用"`.mdx-body` 集中 CSS + mdx-components 最小化"范式——正文排版（标题间距、列表缩进、行高等）集中写在 `app/globals.css` 的 `.mdx-body` 作用域 CSS 里，与既有的 `.reader article` 同体系，三主题统一维护，用后代选择器干净处理"标题里的锚点链接""行内 code vs 代码块 code"等区分。`mdx-components.tsx` 先保持空映射（`{}`），等需要用 React 组件替换某个 HTML 元素时（例如 `<img>` → `next/image`）再来这里加映射。这是经 developer 切片 A 实施验证、reviewer 评审后正式采纳的方案（理由见 `review-feedback.md` RF-1）。
 
 🟢 **Next 16 动态路由 params 是 Promise**：`async function Page({ params }: { params: Promise<{ slug: string }> })`，然后 `const { slug } = await params`。这是相对 Next 13/14 的破坏性变化。
 
@@ -188,12 +192,18 @@ export default withMDX(nextConfig);
 
 ```
 @next/mdx @mdx-js/loader @mdx-js/react @types/mdx   # MDX 核心（官方四件套）
-gray-matter                                          # frontmatter 解析
+gray-matter                                          # frontmatter 解析（读）
 zod                                                  # frontmatter 校验
+remark-frontmatter                                   # frontmatter 剥离（不剥会被渲染成 <hr>+文本）
 remark-gfm                                           # GFM 扩展
-rehype-pretty-code                                   # 代码高亮（带 Shiki）
+rehype-pretty-code                                   # 代码高亮（Shiki 包装层）
+shiki                                                # rehype-pretty-code 的 peerDependency，需显式装
 rehype-slug rehype-autolink-headings                 # 标题锚点（可延后）
 ```
+
+> ⚠️ 两条 2026-06-07 据 developer 实施反馈补正：
+> - `remark-frontmatter`：原清单漏了。gray-matter 负责"读"frontmatter，remark-frontmatter 负责从正文"剥离"，两者职责不同、都要装。
+> - `shiki`：它是 `rehype-pretty-code` 的 **peerDependency**，不是自动带的，必须显式安装（developer 实测装了 `shiki@4.2.0`）。
 
 ---
 

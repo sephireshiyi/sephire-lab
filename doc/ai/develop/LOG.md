@@ -530,3 +530,38 @@ Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑�
 ### 下一步建议
 
 切片 B（列表页 `/blog`）：`fs` 扫 `content/posts/` + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按日期排序 → 卡片列表；首页"最近文章"复用同一读取入口。`lib/content.ts` 已备好 `getPostSlugs`，可加 `getAllPosts()`。
+
+## 2026-06-13 18:56 (task5 - Milestone 3 切片 B)
+
+### 本轮目标
+
+Milestone 3 切片 B（列表页）：实现 `/blog` 文章列表页——扫目录 + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按日期降序排序 → 卡片列表。按 `mdx-pipeline-decisions.md` §11 切片 B 实施。
+
+### 修改文件
+
+- `lib/content.ts`（新增 `getAllPosts()` 函数）
+- `app/blog/page.tsx`（**新建**，列表页）
+
+### 完成内容
+
+- **`getAllPosts()` 函数**（`lib/content.ts`）：复用已有的 `getPostSlugs()` 和 `parsePost()`，扫 `content/posts/` 读每篇的 frontmatter（gray-matter 只切 YAML 头部、不编译 MDX 正文），zod 校验，按 `date` 降序排序（新文章在前）。返回 `Array<Post & { slug: string }>`。
+- **列表页 `app/blog/page.tsx`**：调 `getAllPosts()`，每篇渲染成卡片（标题链接到 `/blog/[slug]`、日期格式化为"YYYY 年 M 月 D 日"、category chip、summary）。使用 spacing token（`mb-3xl`、`space-y-2xl`、`pb-2xl`）和主题变量（`--text-primary`、`--text-secondary`、`--border-color`、`--bg-hover`）。空状态显示"暂无文章"。
+- **category 枚举到中文**：临时在页面内定义 `CATEGORY_LABEL`（tech→技术、thoughts→思考、music→音乐、photo→摄影），后续可抽到 `lib/constants.ts`。
+
+### 验证方式
+
+- dev server 访问 `/blog`：HTTP 200，页面标题"博客"、1 张卡片（hello-world）、标题/日期/category chip 正确渲染。
+- 点击卡片标题链接 → 跳转到 `/blog/hello-world` 详情页（HTTP 200）。
+- **排序逻辑验证**：临时创建第二篇测试文章（date: 2026-06-01，早于 hello-world 的 2026-06-07），重新访问 `/blog` 确认顺序为"你好，世界..."在前、"更早的测试文章"在后（降序正确），验证后删除测试文章。
+
+### 遗留问题 / 后续优化
+
+1. **category 映射抽取**：`CATEGORY_LABEL` 目前在 `page.tsx` 内联，若首页"最近文章"也要显示 category，需抽到 `lib/constants.ts` 或 `lib/content.ts` 统一导出。
+2. **无筛选 / 无分页**：列表页当前显示所有文章（按日期降序），不支持按 category/tag 筛选、不支持分页。这些是切片 C 的内容（未来按需加）。
+3. **标签显示**：`tags` 字段在 frontmatter schema 里有定义（`z.array(z.string()).optional()`），但列表页卡片暂未显示（TODO Milestone 3 里"添加标签显示"项仍待做）。
+4. **首页"最近文章"区**：可复用 `getAllPosts().slice(0, 3)` 取前 3 篇，待首页开发时接入。
+
+### 下一步建议
+
+- **若继续打磨博客**：切片 C（category/tag 筛选、标签 chip 显示、标题锚点 hover 显示 #、`<img>` → `next/image`）。
+- **若转战其他 Milestone**：回到 TODO.md 按 Milestone 顺序（如 Milestone 1 基础站点：清理默认首页、创建导航栏、Hero 区域等）。当前 Milestone 3 核心已打通（单篇详情 + 列表），剩余是增强性功能。

@@ -1,0 +1,376 @@
+# 路径 A 架构设计总结与交接
+
+> 本文档是架构师会话 2026-06-13 为路径 A（MVP 驱动）制定的完整设计方案。
+> 交接给 developer 按顺序实施：首页 → Model Checker → 部署。
+>
+> **生成时间**：2026-06-13  
+> **状态**：✅ 架构设计完成，可交付开发
+
+---
+
+## 0. 路径 A 概览
+
+### 目标
+
+**让站点尽快达到"可展示"状态**——首页门面 + 一个工具 + 线上可访问，优先级高于单模块完成度。
+
+### 为什么选路径 A
+
+1. **MVP 驱动**：博客核心（详情 + 列表）已跑通，先完成首页入口 + 工具 + 部署，构成"可用的个人站"
+2. **真实反馈**：部署后可收集移动端、性能、实际使用的真实数据，再针对性优化
+3. **展示价值**：一个可访问的 sephire.xyz 比"本地完美的博客增强功能"更有展示价值
+
+### 三步走
+
+```
+当前状态：博客详情页 + 列表页 ✅
+   ↓
+步骤 1：首页（Hero + Recent Writing）
+   ↓
+步骤 2：Model Checker 工具
+   ↓
+步骤 3：部署到 Vercel + 绑定 sephire.xyz
+   ↓
+✅ MVP 达成：可展示的个人站上线
+```
+
+之后回来做博客增强（tag 筛选、锚点 hover）、Music 页面、About 详情等。
+
+---
+
+## 1. 新增架构文档清单
+
+本次会话产出 3 个架构决策文档（已写入 `doc/ai/architecture/`）：
+
+| 文档 | 内容 | 关键决策 |
+|---|---|---|
+| **`homepage-decisions.md`** | 首页设计 | 极简 Hero（首屏遵循设计稿）+ Recent Writing 内容区（下滚） |
+| **`model-checker-decisions.md`** | Model Checker 工具 | OpenAI/Anthropic 协议支持、前后端实现、安全隐私 |
+| **`deployment-decisions.md`** | Vercel 部署 | 部署流程、检查清单、域名绑定、性能验证 |
+
+### 已更新文档
+
+- **`review-feedback.md`**：切片 B 的 4 条反馈全部标记 ✅ 已处理
+- **`reader-theme-decisions.md`**（上次会话新建）：reader 主题配色原则
+
+---
+
+## 2. 首页设计（步骤 1）
+
+### 2.1 核心决策
+
+**混合方案**：极简 Hero（首屏 100dvh）+ Recent Writing 内容区（下滚）
+
+**理由**：
+- 设计稿只给了首屏（1440×1024），展示"第一眼震撼"
+- 个人站需要内容入口，不能只有标题
+- 原 LOG 2026-05-07 就包含 Recent Writing 区，设计稿重构时删掉是实施偏差
+
+### 2.2 布局结构
+
+```
+首屏（100dvh）：
+  - 极简居中标题"Sephire Lab"
+  - 严格遵循设计稿（已实现，保持不变）
+
+下滚内容区：
+  - Recent Writing 标题
+  - 最近 3 篇文章卡片（复用 /blog 样式）
+  - "查看全部" → /blog
+```
+
+### 2.3 实施要点
+
+| 任务 | 技术细节 |
+|---|---|
+| **改为 Server Component** | 删除 `"use client"`，调用 `getAllPosts()` |
+| **抽取文章卡片组件** | `components/blog/post-card.tsx`（解决 reviewer 🟢-1） |
+| **抽取辅助函数** | `lib/content.ts` 新增 `formatDate` / `CATEGORY_LABEL` |
+| **更新列表页** | `app/blog/page.tsx` 引用新组件/函数 |
+| **样式一致性** | 容器 `max-w-4xl`，spacing token，与列表页保持一致 |
+
+### 2.4 验证标准
+
+- `/` 首屏：极简标题（与设计稿一致）
+- `/` 下滚：3 张文章卡片 + "查看全部"
+- 点击卡片 → `/blog/[slug]`，点击"查看全部" → `/blog`
+- `pnpm build` 标记 `○ (Static)`
+- 三主题正常
+
+**详见**：`doc/ai/architecture/homepage-decisions.md`
+
+---
+
+## 3. Model Checker 工具（步骤 2）
+
+### 3.1 核心决策
+
+**功能定位**：测试 LLM API 端点的可用性、模型列表、响应延迟
+
+**支持协议**：
+- OpenAI-compatible（`/v1/models` 列举）
+- Anthropic-compatible（`/v1/messages` 简单测试）
+
+**安全原则**：
+- API Key 仅用于本次测试，不存储、不记日志
+- 前端密码框 + 明确提示
+- 后端不传第三方，只直连目标 API
+
+### 3.2 技术实现
+
+| 层 | 技术栈 | 关键点 |
+|---|---|---|
+| **前端** | `app/tools/model-checker/page.tsx` (`"use client"`) | 表单 + 异步请求 + 结果展示 |
+| **后端** | `app/api/model-checker/route.ts` | `fetch` 目标 API + 错误分类 + 超时 10s |
+| **预设** | `lib/model-providers.ts` | OpenAI / Anthropic / OpenRouter / Custom |
+
+### 3.3 UI 设计
+
+- 表单：Provider dropdown / Base URL input / API Key password / Test Type radio
+- 结果区：成功（绿色 + 延迟 + 模型列表）/ 失败（红色 + 错误信息）
+- Loading：按钮 disabled + spinner
+- 容器：`max-w-2xl mx-auto`
+
+### 3.4 实施顺序
+
+1. **后端 API 先行**：`app/api/model-checker/route.ts`（用 curl 测试）
+2. **前端页面**：表单 + 调用后端 + 结果展示
+3. **体验优化**：loading / 错误提示 / 安全文案
+4. **工具索引页**：`app/tools/page.tsx` 展示 Model Checker 卡片
+
+### 3.5 验证标准
+
+- 后端：`curl` 调用返回正确 JSON
+- 前端：填表 → Test → 显示结果
+- 错误场景：故意错误 API Key / URL → 正确提示
+- 三主题正常
+- `pnpm build` 绿
+
+**详见**：`doc/ai/architecture/model-checker-decisions.md`
+
+---
+
+## 4. 部署到 Vercel（步骤 3）
+
+### 4.1 部署前检查
+
+| 检查项 | 标准 |
+|---|---|
+| **Build** | `pnpm build` exit 0 |
+| **Lint** | `pnpm lint` 无阻塞错误（KI-1 可延后） |
+| **内容** | 至少 1 篇博客 + 首页有内容 + 工具可用 |
+| **移动端** | 导航栏/表单/文章在 375px 宽度正常 |
+| **三主题** | Light / Dark / Reader 无闪烁 |
+
+### 4.2 Vercel 流程
+
+1. 推送到 GitHub（`git push origin main`）
+2. Vercel 导入项目（自动识别 Next.js + pnpm）
+3. 首次部署（点击 Deploy）
+4. 绑定域名 `sephire.xyz`（配置 DNS A/CNAME 记录）
+5. 等待 SSL 证书签发
+
+### 4.3 部署后验证
+
+- **功能**：所有页面可访问，Model Checker 可调用
+- **性能**：Lighthouse ≥ 90（Performance）
+- **移动端**：iPhone SE / iPad 实测
+- **三主题**：对照设计稿人工过目
+
+### 4.4 已知问题处理
+
+按 `known-issues.md` 优先级：
+- KI-1（lint 失败）：部署前加 `eslint-disable` 或修复
+- KI-2/3：不阻塞部署，后续优化
+
+**详见**：`doc/ai/architecture/deployment-decisions.md`
+
+---
+
+## 5. Developer 实施顺序（建议）
+
+### Session 1：首页 Hero + Recent Writing
+
+**目标**：完成 `homepage-decisions.md` §5 实施计划（7 个任务）
+
+**核心**：
+1. 抽取 `post-card.tsx` 组件
+2. 抽取 `formatDate` / `CATEGORY_LABEL` 到 `lib/content.ts`
+3. 重写 `app/page.tsx`（Server Component，Hero + Recent Writing）
+4. 更新 `app/blog/page.tsx` 引用新组件
+
+**验证**：`/` 首屏极简 + 下滚 3 篇文章 + `pnpm build` 绿
+
+**LOG 更新**：记录抽取组件/函数、首页实现、验证结果
+
+---
+
+### Session 2：Model Checker 后端 API
+
+**目标**：完成 `model-checker-decisions.md` §7 阶段 1（后端）
+
+**核心**：
+1. 创建 `app/api/model-checker/route.ts`
+2. 实现 POST 接口（OpenAI `/models` + Anthropic `/messages`）
+3. 用 `curl` 或 Postman 本地测试
+
+**验证**：
+```bash
+curl -X POST http://localhost:3000/api/model-checker \
+  -H "Content-Type: application/json" \
+  -d '{"baseUrl":"https://api.openai.com/v1","apiKey":"sk-...","testType":"list-models"}'
+```
+返回 `{ success: true, latency: 234, data: {...} }`
+
+**LOG 更新**：记录 API 实现、测试用例、遗留问题（前端待做）
+
+---
+
+### Session 3：Model Checker 前端页面
+
+**目标**：完成 `model-checker-decisions.md` §7 阶段 2+3（前端 + 优化）
+
+**核心**：
+1. 创建 `app/tools/model-checker/page.tsx`（表单 + 调用后端 + 结果展示）
+2. 创建 `lib/model-providers.ts`（预设服务商）
+3. 样式：spacing token / 主题变量 / loading / 错误提示
+4. 更新 `app/tools/page.tsx`（工具卡片）
+
+**验证**：填表 → Test → 显示结果（成功绿/失败红） + 三主题
+
+**LOG 更新**：记录前端实现、体验优化、工具索引页
+
+---
+
+### Session 4：部署前整理 + 推送
+
+**目标**：完成 `deployment-decisions.md` §2 + §3（检查 + 推送）
+
+**核心**：
+1. `pnpm build` 绿色通过
+2. `pnpm lint` 处理阻塞错误（或加 `eslint-disable`）
+3. 移动端测试（Chrome DevTools Device Mode）
+4. 更新 README.md
+5. `git add . && git commit -m "Complete MVP: homepage + model-checker"` 
+6. `git push origin main`
+
+**验证**：GitHub 仓库最新代码可 clone + build
+
+**LOG 更新**：记录部署前检查、修复的问题
+
+---
+
+### Session 5：Vercel 部署 + 域名绑定
+
+**目标**：完成 `deployment-decisions.md` §4（Vercel 流程）
+
+**核心**：
+1. Vercel 导入 GitHub 仓库
+2. 首次部署（自动）
+3. 绑定 `sephire.xyz`（配置 DNS）
+4. 等待 SSL 证书
+
+**验证**：访问 https://sephire.xyz，所有页面正常
+
+**LOG 更新**：记录部署过程、遇到的问题、最终 URL
+
+---
+
+### Session 6：部署后验证 + 优化
+
+**目标**：完成 `deployment-decisions.md` §5（部署后验证）
+
+**核心**：
+1. Lighthouse 审计（记录分数）
+2. 移动端真机测试（或 BrowserStack）
+3. 三主题视觉过目（对照设计稿）
+4. 处理发现的问题（若有）
+
+**验证**：Performance ≥ 90 / Accessibility ≥ 95 / 移动端可用
+
+**LOG 更新**：记录 Lighthouse 分数、发现的问题、优化措施
+
+---
+
+## 6. 切片 B 遗留的 🟢 提示（首页开发时顺便解决）
+
+Reviewer 对切片 B 的 3 个 🟢 提示：
+
+| 编号 | 问题 | 解决时机 |
+|---|---|---|
+| 🟢-1 | `formatDate` / `CATEGORY_LABEL` 内联 | ✅ Session 1（首页）抽取到 `lib/content.ts` |
+| 🟢-2 | 列表页容器 `800px` vs 详情页 `65ch` | ⏸️ 视觉细节，部署后对照设计稿调 |
+| 🟢-3 | `pnpm lint` 仍红（KI-1） | ⏸️ Session 4（部署前）处理 |
+
+---
+
+## 7. 与上次会话的衔接
+
+### 上次会话（arch1）完成
+
+- ✅ 处理切片 B 的 4 条 reviewer 反馈（RF-1 到 RF-4）
+- ✅ 新建 `reader-theme-decisions.md`（reader 配色原则）
+- ✅ 确认切片 B 就绪，可进入下一阶段
+
+### 本次会话（arch2）完成
+
+- ✅ 制定路径 A 完整架构设计
+- ✅ 新建 3 个决策文档（首页 / Model Checker / 部署）
+- ✅ 给出 developer 6 个 session 的实施顺序
+
+### 交接点
+
+**下一个 developer session** 可直接开始 Session 1（首页），无需再回架构师确认。6 个 session 的设计都已完成，按顺序实施即可。
+
+---
+
+## 8. 后续架构工作（路径 A 完成后）
+
+### 8.1 回来打磨博客（切片 C）
+
+- tag 显示 + category/tag 筛选
+- 标题锚点 hover 显示 `#`
+- `<img>` → `next/image`
+
+### 8.2 补充其他 MVP 页面
+
+- Music 页面（`content-architecture.md` 的 `album` 模型）
+- About 页面详细内容
+
+### 8.3 性能优化
+
+- 根据 Lighthouse 报告针对性优化
+- 建立 `doc/ai/review/perf-baseline.md`
+
+### 8.4 可选扩展
+
+- Gallery（摄影集）
+- Archive（时间索引）
+- 更多工具
+
+---
+
+## 9. 文档地图（给下次架构师会话）
+
+```
+doc/ai/architecture/
+├── CLAUDE.md                       # 架构师工作流（已有）
+├── content-architecture.md         # 内容数据模型（已有）
+├── mdx-pipeline-decisions.md       # MDX 技术栈（已有，切片 A/B 已更新）
+├── font-decisions.md               # 字体方案（已有）
+├── reader-theme-decisions.md       # Reader 配色（上次会话新建）
+├── homepage-decisions.md           # 首页设计（本次新建）⭐
+├── model-checker-decisions.md      # Model Checker（本次新建）⭐
+└── deployment-decisions.md         # 部署流程（本次新建）⭐
+```
+
+---
+
+## 10. 会话元数据
+
+- **会话日期**：2026-06-13
+- **会话名称**：arch2
+- **主要决策**：路径 A 三步走（首页 → Model Checker → 部署）
+- **产出文档**：3 个新架构决策文档
+- **Token 使用**：约 94k / 200k
+- **下一步**：交给 developer 按 6 个 session 顺序实施

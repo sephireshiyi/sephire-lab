@@ -59,3 +59,17 @@ export function getPostBySlug(slug: string): Post & { slug: string } {
   const post = parsePost(path.join(POSTS_DIR, `${slug}.mdx`));
   return { ...post, slug };
 }
+
+/**
+ * 扫 content/posts/ 读取所有文章的 frontmatter（不编译正文）并按日期降序排序。
+ * 供列表页 `/blog` 用——gray-matter 只切 YAML 头，即使有上百篇也很轻。
+ */
+export function getAllPosts(): Array<Post & { slug: string }> {
+  const slugs = getPostSlugs();
+  const posts = slugs.map((slug) => {
+    const post = parsePost(path.join(POSTS_DIR, `${slug}.mdx`));
+    return { ...post, slug };
+  });
+  // 按 date 降序（新文章在前）
+  return posts.sort((a, b) => (a.date > b.date ? -1 : 1));
+}
