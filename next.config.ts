@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 };
 
 // ⚠️ Turbopack（Next 16 默认打包器）下，remark/rehype 插件只能传「字符串名 + 可序列化选项」，
-//    不能传 JS 函数——插件配置要序列化后交给 Rust 侧。详见 mdx-pipeline-decisions.md §5。
+//    不能传 JS 函数——插件配置要序列化后交给 Rust 侧。详见 doc/ai/architecture/decisions/blog-mdx-pipeline.md §5。
 const withMDX = createMDX({
   options: {
     remarkPlugins: [

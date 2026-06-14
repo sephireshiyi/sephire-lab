@@ -19,6 +19,8 @@
 - ✅ 编辑 `doc/ai/develop/` 下的 `LOG.md` / `TODO.md` / `AGENTS.md`
 - ✅ 安装新依赖（但要在 LOG 写明理由）
 - ❌ **不改 `doc/ai/architecture/` 下的决策文档**——如果实现中发现决策有问题，在 LOG 里反馈或与架构师讨论后让架构师更新
+  - 架构文档位置：`doc/ai/architecture/decisions/` 按前缀分类（blog- / tools- / infra-）
+  - 交接文档位置：`doc/ai/architecture/handoffs/`（临时，实施完可删除）
 - ❌ 不擅自重构跨模块的目录 / URL 结构——这是架构师决策范围
 
 ---
@@ -100,6 +102,10 @@
 
 ## 与其他 Role 的协作
 
-- **架构师已沉淀决策**：开发前先看 `doc/ai/architecture/` 下相关文档，按 schema 实现
+- **架构师已沉淀决策**：开发前先看 `doc/ai/architecture/decisions/` 下相关文档，按 schema 实现
+  - 博客相关：`blog-mdx-pipeline.md` / `blog-reader-theme.md`
+  - 功能设计：`homepage-design.md` / `tools-model-checker.md`
+  - 基础设施：`infra-deployment.md` / `infra-fonts.md`
+  - 数据模型：`../architecture/content-architecture.md`（长期架构，在 architecture 根目录）
 - **发现决策与现实不符**：在 LOG 里写"实施反馈：…"，对话里向架构师反馈，**不直接改 architecture/**
 - **审查者标出问题**：按 audit 报告里的严重度排序修，🔴 先 → 🟡 后 → 🟢 看时间

@@ -8,7 +8,7 @@ export const POSTS_DIR = path.join(process.cwd(), "content", "posts");
 
 /**
  * frontmatter 的「唯一事实源」：schema 定义一次，TS 类型由 z.infer 派生。
- * 这样运行时校验与编译期类型永不漂移（见 mdx-pipeline-decisions.md §4）。
+ * 这样运行时校验与编译期类型永不漂移（见 doc/ai/architecture/decisions/blog-mdx-pipeline.md §4）。
  *
  * 注意 date 用 z.iso.date()（zod 4 API）：要求是 "YYYY-MM-DD" 字符串，
  * 所以 frontmatter 里日期必须加引号（date: "2026-06-07"）；写成不带引号的

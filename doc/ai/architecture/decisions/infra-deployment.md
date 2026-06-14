@@ -268,7 +268,7 @@ MIT
 按 `doc/ai/review/known-issues.md` 优先级：
 - **KI-1（🟡）**：`pnpm lint` 失败（theme-dropdown effect 规则）→ 部署前修（或加 `eslint-disable`）
 - **KI-2（🟡）**：`--header-height` 魔法值 → 改 header 样式时注意同步
-- **KI-3（🟡）**：reader 主题配色重叠 → 按 `reader-theme-decisions.md` 收窄旧规则
+- **KI-3（🟡）**：reader 主题配色重叠 → 按 `blog-reader-theme.md` 收窄旧规则
 
 ### 6.3 SEO 提交（可选）
 
@@ -348,6 +348,6 @@ jobs:
 ## 10. 与其他文档的关系
 
 - **根 `CLAUDE.md`**：MVP 要求"部署到 Vercel + 绑定 sephire.xyz"——本文档是完整部署方案
-- **`homepage-decisions.md` / `model-checker-decisions.md`**：这两个功能完成后才能部署（路径 A 顺序）
+- **`homepage-design.md` / `tools-model-checker.md`**：这两个功能完成后才能部署（路径 A 顺序）
 - **`doc/ai/review/known-issues.md`**：部署前需处理 🔴 阻塞项，🟡 可延后
 - **TODO.md Milestone 6**：本设计覆盖全部部署任务

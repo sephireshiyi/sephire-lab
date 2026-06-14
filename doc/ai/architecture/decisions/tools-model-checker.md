@@ -390,5 +390,5 @@ API Key: sk-... (在此粘贴你的 API Key)
 ## 9. 与其他文档的关系
 
 - **根 `CLAUDE.md`**：MVP 范围明确要求 `/tools/model-checker`——本文档定义了完整实现方案
-- **`homepage-decisions.md`**：首页 Tools 预览区（未来扩展）可链接到 Model Checker
+- **`homepage-design.md`**：首页 Tools 预览区（未来扩展）可链接到 Model Checker
 - **TODO.md Milestone 5**：本设计覆盖全部任务项（输入表单 / 结果展示 / API 路由 / 两种协议支持）

@@ -3,7 +3,7 @@
 > - **评审时间**：2026-06-13
 > - **评审范围**：`/blog` 列表页 —— `lib/content.ts`（新增 `getAllPosts()`）、`app/blog/page.tsx`（重写，Server Component 列表）
 > - **评审 agent**：reviewer
-> - **对照基准**：`mdx-pipeline-decisions.md` §11 切片 B、`content-architecture.md` §6.3 性能原则、根 `CLAUDE.md` spacing/主题变量规范
+> - **对照基准**：`doc/ai/architecture/decisions/blog-mdx-pipeline.md` §11 切片 B、`doc/ai/architecture/content-architecture.md` §6.3 性能原则、根 `CLAUDE.md` spacing/主题变量规范
 > - **评审维度**：正确性 / 类型安全 / 性能 / 响应式 / 主题适配 / 设计还原。**未覆盖**：真实浏览器的三主题视觉过目、tag 筛选（切片 C）
 
 ---

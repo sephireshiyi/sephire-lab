@@ -3,7 +3,7 @@
 > - **评审时间**：2026-06-07
 > - **评审范围**：单篇博客端到端管线 —— `next.config.ts` / `mdx-components.tsx` / `lib/content.ts` / `lib/fonts.ts` / `app/blog/[slug]/page.tsx` / `app/blog/layout.tsx` / `content/posts/hello-world.mdx` / `app/globals.css`（`.mdx-body` 段 + `--font-serif`）/ `package.json`
 > - **评审 agent**：reviewer
-> - **对照基准**：`mdx-pipeline-decisions.md`（§4/§5/§6/§11 切片 A）、`content-architecture.md`（§2 数据模型 / §6 渲染管线）、`font-decisions.md`（§5）、根 `CLAUDE.md`
+> - **对照基准**：`doc/ai/architecture/decisions/blog-mdx-pipeline.md`（§4/§5/§6/§11 切片 A）、`doc/ai/architecture/content-architecture.md`（§2 数据模型 / §6 渲染管线）、`doc/ai/architecture/decisions/infra-fonts.md`（§5）、根 `CLAUDE.md`
 > - **评审维度**：正确性 / 类型安全 / 性能 / a11y / 主题适配 / 响应式 / 安全 / 设计还原。**未覆盖**：真实浏览器的三主题像素级过目（环境无浏览器，见文末"覆盖边界"）
 
 ---
@@ -109,7 +109,7 @@
 - `formatDate`（`page.tsx:12-15`）手工切字符串而非 `new Date()`，避开时区把日期推前一天——正确的防御式写法。
 - `lib/content.ts:20` 的 `date: z.iso.date()` + 注释说明"必须加引号，否则 YAML 解析成 Date 对象、校验失败"——把隐式坑变成显式约定 + build 时拦截，教学价值高（"parse, don't validate" 的活例子）。
 - `Post` 由 `z.infer` 派生、不手写 interface；`getPostBySlug` 才补 `slug` 字段——与架构"slug 从文件名派生、不进 frontmatter"一致，单一事实源落地干净。
-- 字体局部挂载（`app/blog/layout.tsx`）+ `fontVariables` 不含宋体 + `preload:false`——完全按 `font-decisions.md` §5 落地，非博客页不下载 CJK。已核实生成 HTML 的 `<html>` 只挂 Maven Pro + Geist Mono。
+- 字体局部挂载（`app/blog/layout.tsx`）+ `fontVariables` 不含宋体 + `preload:false`——完全按 `doc/ai/architecture/decisions/infra-fonts.md` §5 落地，非博客页不下载 CJK。已核实生成 HTML 的 `<html>` 只挂 Maven Pro + Geist Mono。
 - 架构师 §5 留的"`weight:"variable"` 落地若报错按文档调"未决项，开发者实测确认 `"variable"` 可用——闭环干净。
 
 ---

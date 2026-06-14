@@ -2,7 +2,7 @@
 
 > 本文件是项目级 CLAUDE.md，会自动加载到每个 Claude 会话上下文。
 > 内容仅包含**跨 role 的项目契约**——任何角色都必须遵守。
-> Role 专属工作流见 `doc/ai/<role>/CLAUDE.md`，按需 lazy 加载。
+> Role 专属工作流见下方表格，按需 lazy 加载。
 
 ---
 
@@ -64,7 +64,7 @@ Sephire Lab（部署在 sephire.xyz）是个人实验型站点，承载写作、
 | dark | `#1E1E1E` | `#FFFFFF` |
 | reader | `#EAE5D4` | `#1E1907` |
 
-**字体**：Maven Pro（UI/正文）+ Geist Mono（代码）+ Noto Serif SC（博客中文正文，状态见 `doc/ai/architecture/font-decisions.md`）
+**字体**：Maven Pro（UI/正文）+ Geist Mono（代码）+ Noto Serif SC（博客中文正文，状态见 `doc/ai/architecture/decisions/infra-fonts.md`）
 
 **设计原则**：极简黑白、留白多、动效轻、阅读优先。严格对照设计稿，间距/颜色不擅自调整。
 
@@ -76,7 +76,7 @@ Sephire Lab（部署在 sephire.xyz）是个人实验型站点，承载写作、
 
 | Role | 职责 | 工作流文档（lazy 加载） |
 |---|---|---|
-| **架构师** (architect) | 设计、评审、写决策文档 | `doc/ai/architecture/CLAUDE.md` |
+| **架构师** (architect) | 设计、评审、写决策文档 | `doc/ai/architecture/meta/CLAUDE.md` |
 | **开发者** (developer) | 实现功能、调试、写代码、维护 LOG | `doc/ai/develop/CLAUDE.md` |
 | **审查者** (reviewer) | 代码评审、性能/安全/可访问性审计 | `doc/ai/review/CLAUDE.md` |
 
@@ -84,7 +84,7 @@ Sephire Lab（部署在 sephire.xyz）是个人实验型站点，承载写作、
 
 **用户**：在 session 第一句话明确身份，例：「我是开发者，要做 …」。
 
-**Claude**：根据声明，主动 read 对应的 `doc/ai/<role>/CLAUDE.md`（lazy 加载触发），再开始工作。
+**Claude**：根据声明，主动 read 上表对应的工作流文档（lazy 加载触发），再开始工作。
 
 ### Role 输出边界（红线）
 

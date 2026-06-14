@@ -2,7 +2,7 @@
 
 > **性质**：项目无关的思维框架，不绑定 Sephire Lab 的具体选型。用来分析"任何把 Markdown 渲染成页面"的系统——博客、论坛、评论、wiki、文档站、笔记软件。
 >
-> 本项目的具体落点见 `mdx-pipeline-decisions.md`；本文档是它背后的"为什么"。将来加评论、做 wiki、写文档站时回看本文档。
+> 本项目的具体落点见 `../decisions/blog-mdx-pipeline.md`；本文档是它背后的"为什么"。将来加评论、做 wiki、写文档站时回看本文档。
 >
 > **更新历史**：
 > - 2026-06-06：初版。从一次"MDX 技术选型为什么是这样"的讨论中提炼。
@@ -137,7 +137,7 @@ UGC 管线必然多一步：用 `rehype-sanitize` / `DOMPurify` / `sanitize-html
 
 ## 7. Sephire Lab 在这张表上的落点
 
-把本框架套回本项目，解释为什么 `mdx-pipeline-decisions.md` 的选型是那样：
+把本框架套回本项目，解释为什么 `../decisions/blog-mdx-pipeline.md` 的选型是那样：
 
 | 轴 | 本项目取值 | 推出的选择 |
 |---|---|---|

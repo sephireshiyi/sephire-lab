@@ -16,7 +16,7 @@ doc/
 └─ ai/
    ├─ architecture/              # 架构师 agent 维护
    │  ├─ content-architecture.md
-   │  └─ font-decisions.md
+   │  └─ decisions/infra-fonts.md
    ├─ develop/                   # 开发者 agent 维护
    │  ├─ CLAUDE.md
    │  ├─ AGENTS.md
@@ -92,7 +92,7 @@ shiyi-lab/
 - MVP 范围（10 行）
 - 技术栈（5 行）
 - 设计稿参考路径
-- **入口指引**：「架构相关任务：见 doc/ai/architecture/CLAUDE.md；开发任务：见 develop/CLAUDE.md；审查任务：见 review/CLAUDE.md」
+- **入口指引**：「架构相关任务：见 doc/ai/architecture/meta/CLAUDE.md；开发任务：见 develop/CLAUDE.md；审查任务：见 review/CLAUDE.md」
 - 简短约定：「每次新会话开始时，先声明 role 并读 doc/ai/<your-role>/CLAUDE.md」
 
 这样所有 agent 都能拿到项目背景；role-specific 内容通过 Claude 主动 read 触发 lazy 加载，不污染其他 role 的上下文。
@@ -130,7 +130,7 @@ shiyi-lab/
 doc/ai/architecture/
 ├─ README.md                     # 目录用途 + 文档清单 + 维护约定
 ├─ content-architecture.md
-└─ font-decisions.md
+└─ decisions/infra-fonts.md
 ```
 
 README.md 解决"新 agent 进来不知道这里有什么"的问题。一页内容就够。
@@ -150,7 +150,7 @@ README.md 解决"新 agent 进来不知道这里有什么"的问题。一页内�
 | 子类 | 例子 | 何时新增 |
 |---|---|---|
 | **领域 / 数据架构** | `content-architecture.md`、未来的 `tools-architecture.md` | 涉及跨模块的数据流、URL、目录结构 |
-| **技术选型与字体/样式决策** | `font-decisions.md`、未来的 `mdx-pipeline.md`、`theme-system.md` | 引入新依赖、新设计语言 |
+| **技术选型与字体/样式决策** | `decisions/infra-fonts.md`、`decisions/blog-mdx-pipeline.md`、未来的 `theme-system.md` | 引入新依赖、新设计语言 |
 | **ADR（Architecture Decision Record）** | `adr/001-mdx-vs-mdx-remote.md`、`adr/002-spacing-system.md` | 任何关键决策，尤其是有多个备选的 |
 | **未决问题清单** | 跨文档统一的 `open-questions.md`（可选） | 防止散落到各个文档里 |
 | **图示 / 流程图** | `diagrams/data-flow.mmd`（mermaid） | 复杂关系无法用文字说清时 |

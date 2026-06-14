@@ -6,7 +6,7 @@
 >
 > **更新历史**：
 > - 2026-05-21：初版，确定三类内容、共享数据模型、双轨标签系统的基本框架。
-> - 2026-06-06：确定 frontmatter 用 zod 校验，数据模型事实源改为"以 lib/content.ts 的 zod schema 为准、TS 类型 z.infer 派生"（见 §2 开头说明）。MDX 技术栈细节见 `mdx-pipeline-decisions.md`。
+> - 2026-06-06：确定 frontmatter 用 zod 校验，数据模型事实源改为"以 lib/content.ts 的 zod schema 为准、TS 类型 z.infer 派生"（见 §2 开头说明）。MDX 技术栈细节见 `decisions/blog-mdx-pipeline.md`。
 
 ---
 
@@ -38,11 +38,11 @@
 
 ## 2. 数据模型
 
-> **事实源约定（2026-06-06 更新）**：已决定用 zod 做 frontmatter 运行时校验（见 `mdx-pipeline-decisions.md` §4）。因此**实现层的类型以 `lib/content.ts` 里的 zod schema 为准**，TS 类型通过 `z.infer` 派生。本节的 `interface` 是"人类可读的规格说明"，zod schema 是"机器强制的实现"——**两者必须保持一致**；改字段时先改 zod schema，再同步本文档。不要在代码里再手写一份独立的 `interface`，否则会和 schema 漂移。
+> **事实源约定（2026-06-06 更新）**：已决定用 zod 做 frontmatter 运行时校验（见 `decisions/blog-mdx-pipeline.md` §4）。因此**实现层的类型以 `lib/content.ts` 里的 zod schema 为准**，TS 类型通过 `z.infer` 派生。本节的 `interface` 是"人类可读的规格说明"，zod schema 是"机器强制的实现"——**两者必须保持一致**；改字段时先改 zod schema，再同步本文档。不要在代码里再手写一份独立的 `interface`，否则会和 schema 漂移。
 
 ### 2.1 共享基础字段 `BaseContent`
 
-所有内容类型都包含这些字段（规格说明；`post` 的实际 zod schema 见 `mdx-pipeline-decisions.md` §4）：
+所有内容类型都包含这些字段（规格说明；`post` 的实际 zod schema 见 `decisions/blog-mdx-pipeline.md` §4）：
 
 ```ts
 interface BaseContent {

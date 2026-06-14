@@ -2,7 +2,7 @@
 
 > 记录 Sephire Lab 博客 MDX 技术栈选型：编译方式、frontmatter 解析与校验、渲染路径、代码高亮、插件管线。
 >
-> **状态**：✅ **已确认**（2026-06-06 用户拍板：frontmatter 上 zod 校验；首个开发切片走 tracer bullet 先贯通一篇）。配合 `content-architecture.md`（数据模型）与 `font-decisions.md`（正文字体）一起构成博客 Milestone 3 的完整设计输入。实施计划见 §11。
+> **状态**：✅ **已确认**（2026-06-06 用户拍板：frontmatter 上 zod 校验；首个开发切片走 tracer bullet 先贯通一篇）。配合 `../content-architecture.md`（数据模型）与 `infra-fonts.md`（正文字体）一起构成博客 Milestone 3 的完整设计输入。实施计划见 §11。
 >
 > **更新历史**：
 > - 2026-06-06：初版。基于研究工作流（5 维度并行核查 + 对抗式验证）产出推荐栈。
@@ -227,7 +227,7 @@ npm view next-mdx-remote-client version  # 仅当最终决定改用它时才需�
 ## 9. 与其他文档的关系
 
 - **`content-architecture.md`**：本文档实现的是它定义的 `Post` 数据模型与 §6 渲染管线函数签名。⚠️ 决策 3 若上 zod，需把 `content-architecture.md` 的 `BaseContent` interface 改为"由 zod schema 派生"，避免双份定义漂移。
-- **`font-decisions.md`**：详情页正文容器套 `font-serif`（§5 已定），由本管线的 Server Component 渲染。
+- **`infra-fonts.md`**：详情页正文容器套 `font-serif`（§5 已定），由本管线的 Server Component 渲染。
 - **`CLAUDE.md`**：新依赖理由集中在本文档 §2/§4/§5，满足项目契约。
 
 ---
@@ -249,7 +249,7 @@ npm view next-mdx-remote-client version  # 仅当最终决定改用它时才需�
 
 > 用户已确认：第一个开发 session **先贯通一篇**，不要一次做完整个 Milestone 3。目标是"单篇文章端到端跑通",验证管线无误后，再做列表页/筛选/样式。
 >
-> developer 开 session 后：读根 `CLAUDE.md` + `doc/ai/develop/CLAUDE.md` + 本文档 + `content-architecture.md` + `font-decisions.md`，然后把下面的切片转成 `TODO.md` 的 task 条目再动手。
+> developer 开 session 后：读根 `CLAUDE.md` + `doc/ai/develop/CLAUDE.md` + 本文档 + `doc/ai/architecture/content-architecture.md` + `doc/ai/architecture/decisions/infra-fonts.md`，然后把下面的切片转成 `TODO.md` 的 task 条目再动手。
 
 ### 切片 A：单篇文章端到端（第一个 session 的目标）
 

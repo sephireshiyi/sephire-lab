@@ -230,5 +230,5 @@ export function formatDate(isoDate: string): string {
 
 - **根 `CLAUDE.md`**：MVP 范围"首页 `/`"——本文档实现了首页的完整设计
 - **`content-architecture.md`**：Recent Writing 区调用 `getAllPosts()`（§6.3 列表读取）
-- **`mdx-pipeline-decisions.md`**：文章卡片复用 `formatDate` / `CATEGORY_LABEL`（§11 切片 B 提到的抽取）
+- **`blog-mdx-pipeline.md`**：文章卡片复用 `formatDate` / `CATEGORY_LABEL`（§11 切片 B 提到的抽取）
 - **TODO.md Milestone 1**：本设计覆盖"创建首页 Hero 区域"+"创建 Recent Writing 区域"，不做 Projects / Tools 预览（后者等 model-checker 实现）

@@ -473,7 +473,7 @@
 
 ### 本轮目标
 
-Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑通——MDX 编译 + frontmatter zod 校验 + Shiki 代码高亮 + 思源宋体正文 + 三主题。先不做列表页/筛选（切片 B/C）。按 `mdx-pipeline-decisions.md` §11 切片 A 逐步实施。
+Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑通——MDX 编译 + frontmatter zod 校验 + Shiki 代码高亮 + 思源宋体正文 + 三主题。先不做列表页/筛选（切片 B/C）。按 `doc/ai/architecture/decisions/blog-mdx-pipeline.md` §11 切片 A 逐步实施。
 
 ### 修改文件
 
@@ -487,7 +487,7 @@ Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑�
 - `lib/fonts.ts`（`notoSerifSC` 的 `weight` 改 `"variable"`；`fontVariables` 仍不含它）
 - `app/globals.css`（`@theme inline` 加 `--font-serif`；新增 `.mdx-body` 正文排版 + Shiki 三主题 CSS）
 
-### 新增依赖（理由集中见 `mdx-pipeline-decisions.md` §2/§4/§5，此处只列用途）
+### 新增依赖（理由集中见 `doc/ai/architecture/decisions/blog-mdx-pipeline.md` §2/§4/§5，此处只列用途）
 
 | 依赖 | 版本 | 用途 |
 |---|---|---|
@@ -535,7 +535,7 @@ Milestone 3 切片 A（tracer bullet）：把**单篇**博客文章端到端跑�
 
 ### 本轮目标
 
-Milestone 3 切片 B（列表页）：实现 `/blog` 文章列表页——扫目录 + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按日期降序排序 → 卡片列表。按 `mdx-pipeline-decisions.md` §11 切片 B 实施。
+Milestone 3 切片 B（列表页）：实现 `/blog` 文章列表页——扫目录 + gray-matter 只读 frontmatter（不编译正文）+ zod 校验 + 按日期降序排序 → 卡片列表。按 `doc/ai/architecture/decisions/blog-mdx-pipeline.md` §11 切片 B 实施。
 
 ### 修改文件
 

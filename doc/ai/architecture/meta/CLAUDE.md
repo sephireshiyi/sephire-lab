@@ -63,18 +63,47 @@
 
 ---
 
-## 文档命名约定
+## 文档目录结构（2026-06-13 重构）
 
-| 文档性质 | 命名 | 例子 |
-|---|---|---|
-| 跨模块的领域 / 数据架构 | `<domain>-architecture.md` | `content-architecture.md` |
-| 单一技术 / 子系统的决策 | `<topic>-decisions.md` | `font-decisions.md`、未来的 `mdx-pipeline-decisions.md` |
-| 单次关键决策记录（ADR） | `adr/NNN-<slug>.md` | `adr/001-mdx-pipeline.md` |
-| 评估 / 结构类 | `<topic>-structure.md` 或 `<topic>-review.md` | `documentation-structure.md` |
-| 图示 | `diagrams/<topic>.mmd`（mermaid） | |
+```
+doc/ai/architecture/
+├── meta/                              # 元文档（工作流 + 文档体系）
+│   ├── CLAUDE.md                      # 本文件
+│   └── documentation-structure.md
+│
+├── content-architecture.md            # 长期架构设计（根目录）
+│
+├── decisions/                         # 技术框架决策（按前缀分类）
+│   ├── blog-mdx-pipeline.md          # 博客：MDX 渲染管线
+│   ├── blog-reader-theme.md          # 博客：Reader 主题配色
+│   ├── homepage-design.md            # 功能：首页设计
+│   ├── tools-model-checker.md        # 功能：Model Checker 工具
+│   ├── infra-deployment.md           # 基础设施：Vercel 部署
+│   └── infra-fonts.md                # 基础设施：字体系统
+│
+├── handoffs/                          # 临时交接文档
+│   ├── README.md                      # 清理策略说明
+│   └── 2026-06-13-path-a.md          # 路径 A 交接
+│
+└── archive/                           # 已完成决策 / 通用框架
+    ├── README.md                      # 归档清单
+    └── markdown-rendering-tradeoffs.md
+```
+
+### 命名约定
+
+| 文档性质 | 命名 | 位置 | 例子 |
+|---|---|---|---|
+| 元文档 | `<name>.md` | `meta/` | `CLAUDE.md` |
+| 长期架构 | `<domain>-architecture.md` | `architecture/` 根目录 | `content-architecture.md` |
+| 博客相关决策 | `blog-<topic>.md` | `decisions/` | `blog-mdx-pipeline.md` |
+| 功能决策 | `<feature>-design.md` | `decisions/` | `homepage-design.md` |
+| 工具决策 | `tools-<name>.md` | `decisions/` | `tools-model-checker.md` |
+| 基础设施决策 | `infra-<topic>.md` | `decisions/` | `infra-deployment.md` |
+| 交接文档 | `YYYY-MM-DD-<topic>.md` | `handoffs/` | `2026-06-13-path-a.md` |
+| 已归档决策 | `YYYY-MM-DD-<topic>.md` | `archive/` | 按归档日期命名 |
 
 每篇文档顶部必须有：
-
 - 一句话描述本文档目的
 - "更新历史"小节（日期 + 一句话变更）
 
@@ -82,9 +111,23 @@
 
 ## 必读文档（按需）
 
+**长期架构**（architecture 根目录）：
 - `content-architecture.md` — 三类内容（post / photo / album）的数据模型与渲染管线
-- `font-decisions.md` — 字体选型、思源宋体当前状态、待定决策
+
+**元文档**（`meta/`）：
 - `documentation-structure.md` — 文档体系整体设计、各 role 目录的内容分类、跨 role 引用规则
+
+**博客技术栈**（`decisions/blog-*`）：
+- `blog-mdx-pipeline.md` — MDX 编译、代码高亮、插件管线
+- `blog-reader-theme.md` — Reader 主题配色原则
+
+**功能设计**（`decisions/`）：
+- `homepage-design.md` — 首页布局（Hero + Recent Writing）
+- `tools-model-checker.md` — Model Checker 工具设计
+
+**基础设施**（`decisions/infra-*`）：
+- `infra-deployment.md` — Vercel 部署流程
+- `infra-fonts.md` — 字体加载方案
 
 ---
 

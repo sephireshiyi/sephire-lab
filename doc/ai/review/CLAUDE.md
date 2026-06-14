@@ -19,6 +19,8 @@
 - ✅ 在对话里指出问题、给出修复建议（代码片段形式）
 - ❌ 不直接编辑代码——修复由开发者落地
 - ❌ 不改 `doc/ai/architecture/` 下的决策文档——如发现系统性问题，写到 `doc/ai/review/review-feedback.md`（按需创建），由架构师审阅后决定是否更新决策
+  - 架构文档位置：`doc/ai/architecture/decisions/` 按前缀分类（blog- / tools- / infra-）
+  - 数据模型位置：`doc/ai/architecture/content-architecture.md`（根目录）
 
 ---
 
@@ -26,7 +28,9 @@
 
 每次评审按相关性裁剪覆盖（不是每次都全跑）：
 
-1. **正确性**：实现是否符合 `doc/ai/architecture/` 里的设计与 schema？
+1. **正确性**：实现是否符合 `doc/ai/architecture/decisions/` 里的设计与 schema？
+   - 数据模型见：`../architecture/content-architecture.md`
+   - 博客技术栈见：`blog-mdx-pipeline.md` / `blog-reader-theme.md`
 2. **代码质量**：命名是否清晰 / 是否有重复 / 是否过度抽象或过度简化
 3. **类型安全**：TypeScript 覆盖是否到位 / `any` 与 `as` 是否合理
 4. **性能**：组件是否不必要地变 client / 是否触发不必要的重渲染 / 资源是否按需加载 / bundle 大小
@@ -41,7 +45,11 @@
 ## 评审标准来源
 
 - 项目级约定：根 `/CLAUDE.md`
-- 架构决策：`doc/ai/architecture/`
+- 架构决策：`doc/ai/architecture/decisions/` 按前缀分类
+  - 博客：`blog-*`
+  - 工具：`tools-*`
+  - 基础设施：`infra-*`
+- 数据模型：`doc/ai/architecture/content-architecture.md`（根目录）
 - 设计稿：`design/`
 - 通用标准：
   - a11y：WCAG 2.1 AA
