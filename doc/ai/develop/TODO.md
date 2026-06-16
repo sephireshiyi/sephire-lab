@@ -2,56 +2,65 @@
 
 ---
 
+## 命名规范
+
+三层命名，各司其职：
+
+- **Milestone（里程碑 1–6）**：产品路线图阶段，源自 MVP 范围，**永不重编号**。见下方 Milestones 区。
+- **task（task1, task2…）**：开发批次，全局递增。**一个 task ≈ 一条 LOG ≈ 一次可交付 / 可验证的工作量**，细节记在 Developing 区。
+- **切片（Milestone X 切片 A/B/C）**：一个 Milestone 太大、需多个 task 才能完成时的描述性子标签（**不是独立编号轨道**）。例：task4 = M3 切片 A、task5 = M3 切片 B。
+
+> 旧的 "Session N"（见 `../architecture/handoffs/2026-06-13-path-a.md` §5）已废弃，统一映射为 task6~task11，开发以本文件为准。
+
+---
+
 ## Milestones
 
-1. 基础站点
-- [ ] 清理 Next.js 默认首页
-- [ ] 创建基础导航栏
-- [ ] 创建首页 Hero 区域
-- [ ] 创建 Recent Writing 区域
-- [ ] 创建 Projects 预览区
-- [ ] 创建 Tools 预览区
-- [ ] 创建 `/blog`
-- [ ] 创建 `/projects`
-- [ ] 创建 `/tools`
-- [ ] 创建 `/about`
-2. 主题系统
-- [ ] 安装 next-themes
-- [ ] 创建 ThemeProvider
-- [ ] 创建 ThemeSwitcher
-- [ ] 添加 light 主题
-- [ ] 添加 dark 主题
-- [ ] 添加 reader 主题
-- [ ] 使用 CSS variables 管理主题颜色
-3. MDX 博客
+> 产品路线图，永不重编号。各项后标注对应 task（开发批次细节见 Developing 区）。
+
+1. 基础站点 — ✅ 基本完成，Tools 预览区留 task8（Recent Writing 已由 task6 收尾）
+- [x] 清理 Next.js 默认首页
+- [x] 创建基础导航栏
+- [x] 创建首页 Hero 区域（极简版）
+- [x] 创建 Recent Writing 区域 → **task6**
+- [ ] 创建 Tools 预览区 → **task8**（Model Checker 就绪后在首页补工具卡片）
+- [x] 创建 `/blog`
+- [x] 创建 `/tools`
+- [x] 创建 `/about`
+- ~~创建 Projects 预览区 / 创建 `/projects`~~ —— 移出 MVP（根 `CLAUDE.md`「第一版暂不做：项目展示页」）
+2. 主题系统 — ✅ 完成
+- [x] 安装 next-themes
+- [x] 创建 ThemeProvider
+- [x] 创建主题切换 UI（task3 重构为 ThemeDropdown）
+- [x] 添加 light 主题
+- [x] 添加 dark 主题
+- [x] 添加 reader 主题
+- [x] 使用 CSS variables 管理主题颜色
+3. MDX 博客 — ✅ 核心完成（切片 A/B），标签显示留切片 C
 - [x] 创建 `content/posts`
 - [x] 添加第一篇 MDX 文章
 - [x] 实现读取文章元信息
 - [x] 实现 `/blog` 文章列表
 - [x] 实现 `/blog/[slug]` 文章详情
 - [x] 添加代码高亮
-- [ ] 添加标签显示
-4. 项目展示
-- [ ] 创建项目数据结构
-- [ ] 创建项目卡片组件
-- [ ] 完成 `/projects`
-- [ ] 添加 2-3 个示例项目
-5. 工具集合
-- [ ] 完成 `/tools`
-- [ ] 创建工具卡片组件
-- [ ] 创建 `/tools/model-checker`
-- [ ] 实现输入表单
-- [ ] 实现测试结果展示
-- [ ] 创建 `/api/model-checker`
-- [ ] 支持 OpenAI Compatible `/models` 测试
-- [ ] 支持 Anthropic Compatible 基础测试
-6. 部署
-- [ ] 推送到 GitHub
-- [ ] 导入 Vercel
-- [ ] 配置环境变量
-- [ ] 绑定 sephire.xyz
-- [ ] 检查移动端显示
-- [ ] 更新 README
+- [ ] 添加标签显示 → **切片 C**（路径 A 完成后回来）
+4. ~~项目展示~~ — 整体移出 MVP（根 `CLAUDE.md`「第一版暂不做：项目展示页」）
+5. 工具集合 — ⬜ task7（后端）+ task8（前端 / 工具页）
+- [ ] 完成 `/tools` → task8
+- [ ] 创建工具卡片组件 → task8
+- [ ] 创建 `/tools/model-checker` → task8
+- [ ] 实现输入表单 → task8
+- [ ] 实现测试结果展示 → task8
+- [ ] 创建 `/api/model-checker` → task7
+- [ ] 支持 OpenAI Compatible `/models` 测试 → task7
+- [ ] 支持 Anthropic Compatible 基础测试 → task7
+6. 部署 — ⬜ task9（整理推送）+ task10（Vercel + 域名）+ task11（部署后验证）
+- [ ] 推送到 GitHub → task9
+- [ ] 导入 Vercel → task10
+- [ ] 配置环境变量 → task10
+- [ ] 绑定 sephire.xyz → task10
+- [ ] 检查移动端显示 → task11
+- [ ] 更新 README → task9
 
 ---
 
@@ -198,6 +207,89 @@
 - 标签 chip 显示
 - 分页（文章多时）
 - 首页"最近文章"区复用 `getAllPosts().slice(0,3)`
+
+---
+
+### task6 ✅ 已完成
+
+> ✅ **已完成**：Milestone 1 收尾 —— 首页改 Server Component，Hero 保持极简（首屏不变）+ 新增下滚 Recent Writing 区；抽取 `components/blog/post-card.tsx` 与 `lib/content.ts` 的 `formatDate` / `CATEGORY_LABEL`（解决 reviewer 切片 B 🟢-1）。详细见 `LOG.md` 2026-06-16 (task6)。
+> **设计依据**：`../architecture/decisions/homepage-design.md` §3、§5
+> **推进**：Milestone 1（创建 Recent Writing 区域 ✅；Tools 预览区仍留 task8）
+
+**任务分解**：
+
+1. `app/page.tsx` 改 Server Component（删 `"use client"`），Hero 区保持不变
+2. 抽 `components/blog/post-card.tsx`（从 `app/blog/page.tsx` 抽卡片，props `{ post, showSummary? }`）
+3. 抽 `formatDate` / `CATEGORY_LABEL` 到 `lib/content.ts`（与 `PostSchema` 同文件，**不新开 `lib/constants.ts`**）
+4. `app/blog/page.tsx` 改引用新组件 + 新函数，行为不变
+5. `app/page.tsx` Hero 下新增 `<section>`：`getAllPosts().slice(0,3)` → 3 张 PostCard + "查看全部 →" 链到 `/blog`
+
+**样式约束**：下滚区对齐 `/blog` 列表页 —— 容器 `max-w-4xl mx-auto px-lg py-5xl`、标题 `text-3xl font-medium mb-3xl`、卡片间距 `space-y-2xl`、全用 spacing token + 主题变量。
+
+**验收**：`pnpm build` 绿且 `/` 标 `○ (Static)`；首屏极简标题与设计稿一致；下滚见 3 卡片 + 查看全部；点卡片 → 详情、点查看全部 → `/blog`；light/dark/reader 三主题各过一遍。
+
+**验证现状（task6 收尾）**：`npx tsc --noEmit` 绿；代码层验收项全部满足（结构上 `/` 为纯静态 Server Component，预期标 `○ Static`）。两项需停 dev / 上浏览器才能闭环、留给 reviewer 或部署前：① `pnpm build` 的 `○ Static` 标记（按 `doc/dev-server-guide.md` 约定，须先停 dev server 才能跑，未擅自停）；② 三主题视觉 + 点击跳转的浏览器过目。另：当前仅 1 篇文章，下滚显示 1 张卡片（`slice(0,3)` 行为正确，"3 张"取决于文章数）。
+
+**实施偏差（给架构师，已记 LOG）**：Recent Writing 容器用 `max-w-[800px]`（对齐 `/blog` 列表页实际宽度），未用设计文档/handoff 写的 `max-w-4xl`(896px)——理由是"复用列表页样式"的意图 + handoff §6 🟢-2 已知列表页是 800px 且把宽度统一推迟到部署后；用 4xl 反而会造出第三种宽度。待 🟢-2 决定最终宽度时两处一起改。
+
+**收尾补充（2026-06-16 theme polish + reviewer 审计回应）**：
+- reviewer 已出 task6 审计（`doc/ai/review/audits/2026-06-16-task6-homepage-recent-writing.md`）：**无 🔴**；隔离目录 `pnpm build` 确认 `/`、`/blog` 为 `○ (Static)`、`/blog/[slug]` 为 `● (SSG)` —— 上面"验证现状"里 build/`○ Static` 待补项由此闭环。
+- 🟡（reader 全局 `.reader article` 泄漏到 PostCard）→ **已在 theme polish 收尾修复**：删除 `.reader article, .reader .prose` 裸元素选择器，正文排版统一迁到 `.mdx-body`（三主题 18px / line-height 1.8），符合架构师 `blog-reader-theme.md §3.1` 新原则。同批还完成：去掉 `.reader a` 全局下划线、reader 底色改 `#F4EDD6`（+secondary 微调）、`disableTransitionOnChange` 修主题切换分界线、reader logo 重导出对齐新底色。详见 LOG「2026-06-16 主题样式打磨」「reader logo 重导出」两条。
+- 🟢-1（PostCard 标题硬编码 `h2`，首页 heading 层级偏扁）→ **未做**，留后续（reviewer 标为可推迟；如继续复用卡片再加 `headingLevel`/`titleAs` prop，首页传 h3）。
+- 🟢-2（容器宽度 `max-w-4xl` vs `800px`）→ 架构师范围，待统一。
+- **待最终确认**：reviewer/architect 复核 🟡 修复 + 浏览器三主题视觉过目（含 reader logo 色差）。
+
+**红线**：本 task 只做首页 Recent Writing。Tools 预览区等 Model Checker 做完（task8），Projects 不做。不碰 KI-1/2/3。
+
+---
+
+### task7 ⬜ 待开发
+
+> **目标**：Model Checker 后端 API —— `app/api/model-checker/route.ts`，POST 接口测 OpenAI `/models` + Anthropic `/messages`。
+> **设计依据**：`../architecture/decisions/tools-model-checker.md` §7 阶段 1
+> **推进**：Milestone 5（`/api/model-checker`、OpenAI / Anthropic 协议测试）
+
+**验收**：`curl` 调用返回 `{ success, latency, data }`；错误场景（错 key / 错 URL）正确分类并提示；超时 10s。前端留 task8。
+
+---
+
+### task8 ⬜ 待开发
+
+> **目标**：Model Checker 前端页 + 工具索引页 —— `app/tools/model-checker/page.tsx`（表单 + 调后端 + 结果展示）、`lib/model-providers.ts`（预设服务商）、`app/tools/page.tsx`（工具卡片）。
+> **设计依据**：`../architecture/decisions/tools-model-checker.md` §7 阶段 2+3
+> **推进**：Milestone 5（`/tools`、工具卡片、表单、结果展示）；顺带 Milestone 1 在首页补一张工具卡片
+
+**验收**：填表 → Test → 成功绿 / 失败红；loading 态（按钮 disabled + spinner）；API Key 用密码框且不存储 / 不记日志；三主题正常；`pnpm build` 绿。
+
+---
+
+### task9 ⬜ 待开发
+
+> **目标**：部署前整理 + 推送 GitHub。
+> **设计依据**：`../architecture/decisions/infra-deployment.md` §2+§3
+> **推进**：Milestone 6（推送到 GitHub、更新 README）
+
+**核心**：`pnpm build` 绿；处理 KI-1（`pnpm lint` 红 —— 加 `eslint-disable` + 说明，或换 hydration-safe 占位）；移动端 375px 自测；更新 README；commit + `git push origin main`。
+
+---
+
+### task10 ⬜ 待开发
+
+> **目标**：Vercel 部署 + 绑定 sephire.xyz。
+> **设计依据**：`../architecture/decisions/infra-deployment.md` §4
+> **推进**：Milestone 6（导入 Vercel、配置环境变量、绑定域名）
+
+**核心**：Vercel 导入仓库（自动识别 Next + pnpm）→ 首次部署 → 配 DNS 绑 `sephire.xyz` → 等 SSL 证书。
+
+---
+
+### task11 ⬜ 待开发
+
+> **目标**：部署后验证 + 优化。
+> **设计依据**：`../architecture/decisions/infra-deployment.md` §5
+> **推进**：Milestone 6（检查移动端显示）
+
+**核心**：Lighthouse 审计（Performance ≥ 90 / a11y ≥ 95）；移动端真机；三主题对照设计稿过目；处理发现的问题。性能基线 `doc/ai/review/perf-baseline.md` 由审查者建立。
 
 ---
 

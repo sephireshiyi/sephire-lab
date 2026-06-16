@@ -73,3 +73,28 @@ export function getAllPosts(): Array<Post & { slug: string }> {
   // 按 date 降序（新文章在前）
   return posts.sort((a, b) => (a.date > b.date ? -1 : 1));
 }
+
+// ── 展示辅助 ──────────────────────────────────────────────────────────
+// 列表页 / 详情页 / 首页 Recent Writing 共用，避免各自内联一份（解决 reviewer 🟢-1）。
+
+/**
+ * category 枚举值 → 中文标签。
+ * 键类型绑定 PostSchema 的 category enum：日后给 enum 加新分类却忘了补标签，
+ * 这里会编译报错提醒，不会运行时悄悄漏掉。
+ */
+export const CATEGORY_LABEL: Record<Post["category"], string> = {
+  tech: "技术",
+  thoughts: "思考",
+  music: "音乐",
+  photo: "摄影",
+};
+
+/**
+ * "2026-06-07" → "2026 年 6 月 7 日"。
+ * 按字符串字段拆分格式化，刻意不用 new Date()：后者会把 "2026-06-07" 当 UTC 午夜解析，
+ * 再用本地时区读取，在负时区（如美洲）会把日期推前一天。
+ */
+export function formatDate(iso: string): string {
+  const [year, month, day] = iso.split("-");
+  return `${year} 年 ${Number(month)} 月 ${Number(day)} 日`;
+}

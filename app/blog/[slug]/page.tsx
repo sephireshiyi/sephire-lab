@@ -1,4 +1,4 @@
-import { getPostBySlug, getPostSlugs } from "@/lib/content";
+import { formatDate, getPostBySlug, getPostSlugs } from "@/lib/content";
 
 // 只允许 generateStaticParams 列出的 slug；访问未定义的路由直接 404（不在请求时动态编译）。
 export const dynamicParams = false;
@@ -6,12 +6,6 @@ export const dynamicParams = false;
 // build 时扫 content/posts/ 把每篇 slug 预生成为静态路由。
 export function generateStaticParams() {
   return getPostSlugs().map((slug) => ({ slug }));
-}
-
-// "2026-06-07" → "2026 年 6 月 7 日"。按字符串字段格式化，避免 new Date() 的时区把日期推前一天。
-function formatDate(iso: string): string {
-  const [year, month, day] = iso.split("-");
-  return `${year} 年 ${Number(month)} 月 ${Number(day)} 日`;
 }
 
 export default async function PostPage({

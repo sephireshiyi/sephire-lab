@@ -26,6 +26,7 @@ export default function RootLayout({
           defaultTheme="light"
           themes={["light", "dark", "reader"]}
           enableSystem={false}
+          disableTransitionOnChange
         >
           <SiteHeader />
           <main

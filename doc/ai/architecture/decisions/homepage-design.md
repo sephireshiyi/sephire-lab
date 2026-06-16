@@ -6,6 +6,7 @@
 >
 > **更新历史**：
 > - 2026-06-13：初版。基于设计稿 + MVP 定位 + LOG 历史，确定"极简 Hero + 内容区"混合方案。
+> - 2026-06-16：task6 落地后回写实现现实——容器宽度定为 `max-w-[800px]`（非 `4xl`）、卡片为 divider 风格（非 boxed）、修正 §3.3 `formatDate` 示例的 `new Date()` 时区 bug；新增「容器宽度决策」解决切片 B 🟢-2。
 
 ---
 
@@ -118,9 +119,9 @@ export default async function Home() {
 
 | 元素 | 规范 |
 |---|---|
-| **容器宽度** | `max-w-4xl mx-auto`（与 `/blog` 列表页一致） |
+| **容器宽度** | `max-w-[800px] mx-auto`（与 `/blog` 列表页**实际**一致；理由见 §4「容器宽度决策」） |
 | **标题** | `text-3xl font-medium mb-3xl`，使用 `--text-primary` |
-| **文章卡片** | 复用 `/blog` 的卡片组件（标题 + 日期 + category chip + summary） |
+| **文章卡片** | 复用 `components/blog/post-card.tsx`（divider 风格：标题 + 日期 + category chip + summary） |
 | **间距** | 卡片之间 `space-y-2xl`（与列表页一致） |
 | **"查看全部"链接** | `text-base underline hover:opacity-70`，右对齐或居中 |
 | **上下留白** | 内容区 `py-5xl`（与 Hero 区拉开距离） |
@@ -137,17 +138,19 @@ components/blog/
 **抽取辅助函数**：解决 reviewer 🟢-1（`formatDate` 和 `CATEGORY_LABEL` 内联问题）
 
 ```ts
-// lib/content.ts（扩展）
-export const CATEGORY_LABEL: Record<string, string> = {
+// lib/content.ts（扩展）— 与 PostSchema 同文件，键类型绑定 category enum
+export const CATEGORY_LABEL: Record<Post["category"], string> = {
   tech: "技术",
   thoughts: "思考",
   music: "音乐",
   photo: "摄影",
 };
 
-export function formatDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`;
+// 按字符串字段拆分，刻意不用 new Date()：后者把 "2026-06-07" 当 UTC 午夜解析、
+// 再按本地时区读取，在负时区（美洲）会把日期推前一天。
+export function formatDate(iso: string): string {
+  const [year, month, day] = iso.split("-");
+  return `${year} 年 ${Number(month)} 月 ${Number(day)} 日`;
 }
 ```
 
@@ -175,10 +178,21 @@ export function formatDate(isoDate: string): string {
 
 **原则**：与 `/blog` 列表页保持一致（spacing token / 主题变量 / 字号 / 卡片样式）
 
-- 容器：`max-w-4xl mx-auto px-lg py-5xl`
+- 容器：`max-w-[800px] mx-auto px-lg py-5xl`
 - 标题：`text-3xl font-medium mb-3xl`
-- 卡片：`border border-[var(--border-color)] rounded-lg p-lg hover:bg-[var(--bg-hover)]`
+- 卡片：divider 风格 `border-b pb-2xl`（仅底部分隔线，复用 `PostCard`；非独立 boxed 卡片）
 - 间距：`space-y-2xl`
+
+#### 容器宽度决策（2026-06-16，解决切片 B 🟢-2）
+
+站内**有意保留两种宽度**，按内容性质区分：
+
+| 区域 | 宽度 | 理由 |
+|---|---|---|
+| `/blog` 列表 + 首页 Recent Writing | `max-w-[800px]` | 卡片栅格，统一一个容器宽度 |
+| `/blog/[slug]` 详情正文 | `max-w-[65ch]` | 长文排版，`ch` 跟随字号、经典阅读宽度 |
+
+不再用文档初版写的 `max-w-4xl`（会凭空造出第三种宽度）。最终像素值若需对照设计稿微调，等部署后统一在这里改。日后若两处宽度频繁联动，再抽 `--content-width` token。
 
 ---
 

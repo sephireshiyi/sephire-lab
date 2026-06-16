@@ -107,4 +107,5 @@ Sephire Lab（部署在 sephire.xyz）是个人实验型站点，承载写作、
 - 新依赖要在文档里写明理由
 - 关键决策必须落到 `doc/ai/architecture/` 文档里，不能只在对话里讲完就丢
 - 文件结构：内容放 `content/`、静态资源放 `public/`、设计稿放 `design/`、文档放 `doc/`
+- 验证默认用 `npx tsc --noEmit`（不碰 `.next`、可与 dev server 并存）；要跑 `pnpm build` 看生产产物必须先停 dev server——机制与安全姿势详见 `doc/dev-server-guide.md`
 - 任何会影响"数据形状"或"URL 形状"的改动，必须先看（或先更新）`doc/ai/architecture/content-architecture.md`

@@ -9,12 +9,12 @@ import Image from "next/image";
  * 挂在 <html> 上）控制显示哪一张。优点：无需 JS 状态、不会有 hydration 闪烁、
  * 主题切换瞬时；缺点：浏览器会预加载三张图，但 Next.js Image 会优化体积。
  *
- * 三个图文件预期渲染对应主题背景下的玻璃色散效果：
- * - /logo-light.png   背景 #F9F9F9 烘焙
- * - /logo-dark.png    背景 #1E1E1E 烘焙
- * - /logo-reader.png  背景 #EAE5D4 烘焙
+ * 三个图文件渲染对应主题背景下的玻璃色散效果（各主题独立变体，非占位图）：
+ * - /logo/logo-light.png  背景 #F9F9F9 烘焙
+ * - /logo/logo-dark.png   背景 #1E1E1E 烘焙
+ * - /logo/logo-read.png   背景 #F4EDD6 烘焙（reader 底色 #EAE5D4→#F4EDD6 后已重新导出对齐，2026-06-16）
  *
- * 目前三个文件是同一张占位图，待 Figma 导出变体后替换即可。
+ * 设计源在 design/，导出后覆盖到 public/logo/（站点实际 served 的副本）。
  */
 const LOGO_WIDTH = 1968;
 const LOGO_HEIGHT = 928;

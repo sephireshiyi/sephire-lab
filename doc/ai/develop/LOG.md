@@ -565,3 +565,175 @@ Milestone 3 切片 B（列表页）：实现 `/blog` 文章列表页——扫目
 
 - **若继续打磨博客**：切片 C（category/tag 筛选、标签 chip 显示、标题锚点 hover 显示 #、`<img>` → `next/image`）。
 - **若转战其他 Milestone**：回到 TODO.md 按 Milestone 顺序（如 Milestone 1 基础站点：清理默认首页、创建导航栏、Hero 区域等）。当前 Milestone 3 核心已打通（单篇详情 + 列表），剩余是增强性功能。
+
+## 2026-06-16 (task6 - Milestone 1 收尾 · 首页 Hero + Recent Writing)
+
+### 本轮目标
+
+Milestone 1 收尾：首页改 Server Component，保留极简 Hero（首屏不变），下滚新增 Recent Writing 区（最近 3 篇文章卡片 + "查看全部"链接）。顺带把切片 B reviewer 🟢-1 标的内联辅助函数（`formatDate` / `CATEGORY_LABEL`）抽到 `lib/content.ts`，并抽出可复用的 `PostCard` 组件。按 `doc/ai/architecture/decisions/homepage-design.md` §3、§5 实施。
+
+### 修改文件
+
+- `lib/content.ts`（新增导出 `CATEGORY_LABEL` / `formatDate`）
+- `components/blog/post-card.tsx`（**新建**，复用文章卡片组件）
+- `app/blog/page.tsx`（改用 `PostCard` + 共享辅助，行为不变）
+- `app/blog/[slug]/page.tsx`（删内联 `formatDate`，改 import 共享版）
+- `app/page.tsx`（删 `"use client"` → Server Component，Hero + 新增 Recent Writing 区）
+
+### 完成内容
+
+- **抽取展示辅助（解决 🟢-1）**：`formatDate` / `CATEGORY_LABEL` 从 `app/blog/page.tsx` 内联移到 `lib/content.ts` 统一导出（按 task6 约束放在 `PostSchema` 同文件，未新开 `lib/constants.ts`）。
+  - `formatDate` 保留**字符串拆分**实现（`iso.split("-")`），**没有**照搬 homepage-design.md §3.3 示例里的 `new Date(isoDate)` 版本——后者会把 `"2026-06-07"` 当 UTC 午夜解析、再用本地时区读取，在负时区（美洲）把日期推前一天。详情页 `app/blog/[slug]/page.tsx` 原本就有一份带"避免 new Date 时区"注释的同款实现，正好印证这点；现列表页/详情页/首页统一用这一份。
+  - `CATEGORY_LABEL` 类型从 `Record<string, string>` 收紧为 `Record<Post["category"], string>`，绑定 zod enum：日后给 category 加新枚举却忘了补中文标签会**编译报错**提醒。
+- **抽取 `PostCard` 组件**：把 `app/blog/page.tsx` 内联的卡片 markup 原样搬到 `components/blog/post-card.tsx`，props `{ post, showSummary? }`（`showSummary` 默认 true）。纯展示、无交互，保持 Server Component。列表页与首页共用它，保证两处视觉一致。
+- **`app/blog/page.tsx`**：删掉内联的两个辅助 + 卡片 markup，改 `posts.map((post) => <PostCard ... />)`。容器（`max-w-[800px]`）/标题/空状态全部不变——列表页渲染结果与改前一致。
+- **`app/blog/[slug]/page.tsx`**：删掉本文件内联的 `formatDate`，从 `@/lib/content` import。这是 🟢-1 同一份重复函数的第三处；详情页虽属切片 A，但抽取共享辅助时留着第三份重复就等于给 reviewer 再标一次，故顺手清掉（仅一行 import 改动 + 删 4 行函数，行为不变）。
+- **`app/page.tsx`**：删 `"use client"` → Server Component（首页本无交互）。Hero 区类名一字未改（仅 `<div>`→`<section>` 语义化），首屏视觉与设计稿、task2 的居中补偿逻辑保持不变。Hero 下新增 Recent Writing `<section>`：`getAllPosts().slice(0,3)` → `PostCard` 列表 + 居中"查看全部 →"链到 `/blog`；容器对齐 `/blog`（`max-w-[800px]`），`py-5xl` 比列表页留白更大以与满屏 Hero 拉开距离。
+
+### 验证方式
+
+- **类型检查**：`npx tsc --noEmit` 绿（exit 0）。〔说明：本轮稍早跑过一次 exit 0，时点在全部 5 个代码改动**之后**；此后只动了 LOG/TODO 文档、未再碰代码，结论仍成立。落笔本条目时 Bash 安全分类器临时不可用，无法再跑一次 fresh，待恢复即补跑；你也可用 `! npx tsc --noEmit` 即时复核。〕
+- **未跑 `pnpm build`**：按 `doc/dev-server-guide.md` 约定，`next build` 启动会清空 dev server 脚下的 `.next`，须先停 dev 才能安全跑，本轮未擅自停 dev、未跑 build。故 `/` 的 `○ Static` 标记**待补验**——但结构上 `/` 是无动态 API 的 Server Component（`getAllPosts()` 在 build 时读 fs、无 cookies/headers/searchParams、无 force-dynamic），预期会预渲染为 `○ Static`；详情页 `dynamicParams=false` + `generateStaticParams` 仍为 `● SSG`。
+- **未做浏览器过目**：三主题（light/dark/reader）视觉、点卡片 → 详情、点"查看全部" → `/blog` 的实际点击需在 :3000 眼过——本轮未做。代码层用的都是主题 CSS 变量 + 正确的 `href`，逻辑上成立。
+
+### 遗留问题 / 实施反馈（给架构师）
+
+1. **【实施反馈】容器宽度用 `max-w-[800px]` 而非文档写的 `max-w-4xl`**：homepage-design.md §3.2/§4 与 handoff §2.3 都写 Recent Writing 容器用 `max-w-4xl`(896px)，但 `/blog` 列表页实际是 `max-w-[800px]`。我选 `800px` 对齐列表页真实宽度，理由：(a) 文档反复强调"复用 /blog 列表页样式 / 与列表页一致"，意图是视觉一致性；(b) handoff §6 🟢-2 已记着"列表页 800px vs 详情页 65ch"是已知、推迟到部署后统一的视觉细节，用 4xl 反而凭空造出第三种宽度，让 🟢-2 更乱。建议架构师解 🟢-2 时定一个最终宽度、列表页 + 首页一起改，并据此更新 homepage-design.md §3.2/§4（按红线我没改 architecture/ 文档）。
+2. **【待过目】`pnpm build` 的 `○ Static` 标记 + 三主题视觉**：见上"验证方式"，留给 reviewer 或部署前停 dev 后补。
+3. **内容数量**：当前 `content/posts/` 仅 1 篇，Recent Writing 下滚显示 1 张卡片；`slice(0,3)` 行为正确，文章 ≥3 篇后自然显示 3 张。
+4. **`showSummary` prop**：`PostCard` 暴露 `showSummary`（默认 true），列表页与首页当前都用默认值（显示摘要，与设计 §3.2 一致）；prop 留作日后更紧凑列表的开关，当前无处传 false。
+
+### 下一步建议
+
+- **可进入 reviewer 评审**（带 2 个待补验项）：task6 代码完成、tsc 绿。建议 reviewer 重点看 ① 抽取后的 `PostCard` / `lib/content.ts` 辅助是否贴合切片 B 反馈意图；② 首页 Server Component 边界（确认无多余 client JS bundle）；③ 顺手在停 dev 后跑一次 `pnpm build` 确认 `/` = `○ Static` 并三主题过目。
+- **task6 之后**：按 TODO 顺序是 task7（Model Checker 后端 API）。本轮严格未碰 task7 范围。
+
+## 2026-06-16 (task6 收尾 - 主题样式打磨 / theme polish)
+
+### 本轮目标
+
+task6 样式收尾：① 三主题博客正文统一采用 reader 那套舒适阅读样式；② 去掉 reader 主题全局链接下划线污染；③ reader 背景改 `#F4EDD6`；④ 修复切主题时 header/hero/main 变色快慢不一致闪出的分界线。**不改博客正文容器宽度**、不引入按屏幕比例的布局。
+
+### 修改文件
+
+- `app/globals.css`（正文样式迁移 + reader 全局规则清理 + reader 配色 + 去掉 body 颜色过渡）
+- `app/layout.tsx`（ThemeProvider 加 `disableTransitionOnChange`）
+- `components/layout/logo.tsx`（仅注释：更新 reader logo 烘焙底色说明 + 资产提醒）
+- `mdx-components.tsx`（仅注释：去掉对已删除的 `.reader article` 的引用）
+
+### 完成内容
+
+1. **正文阅读样式统一到 `.mdx-body`（任务 1）**：`.mdx-body` 加 `font-size: 1.125rem`（原先只有 reader 通过 `.reader article` 设置，light/dark 是 16px）。现三主题正文都是 18px / line-height 1.8。**副作用（已确认、符合"统一"意图）**：light/dark 正文字号由 16px→18px 变大、更舒适。
+2. **清理 reader 全局规则（任务 2）**：删除 `.reader article, .reader .prose`（过宽全局 article 选择器，会误伤文章卡片）、`.reader a { text-decoration: underline }`（链接全局下划线根因）、`.reader code`（与 `.mdx-body :not(pre) > code` 冲突的硬编码色）。
+   - 删 `.reader a` 后，reader 正文链接改由三主题统一的 `.mdx-body a`（`var(--text-primary)` + 下划线 + 轻量 hover 变 `--text-secondary`）接管 → 与 light/dark 一致；导航 / 首页"查看全部"等 UI 链接不再被全局下划线污染（它们各有自己的样式）。
+   - 删 `.reader code` 后，reader 行内 code 走 `.mdx-body :not(pre) > code`（`var(--bg-hover)` 主题感知药丸），代码块走 Shiki + `--bg-secondary`，不再有 `#e8e4d9/#5d4e37` 硬编码冲突。
+3. **reader 配色（任务 3）**：`--bg-primary` `#EAE5D4`→`#F4EDD6`。**必要微调**：`--bg-secondary` `#F5F0DF`→`#FBF6E4`——新底色变浅后，旧的 `#F5F0DF` 几乎与底色同色，会丢失卡片/代码块的"抬起"对比；微调后仍比底色略浅（与 light/dark 的 secondary 比 primary 浅方向一致）。`--bg-hover`（半透明叠加）/`--border-color`(#D4CFC0)/文字色在新底上仍协调，未动。
+4. **切主题分界线（任务 4）**：`app/layout.tsx` 的 `<ThemeProvider>` 加 `disableTransitionOnChange`——next-themes 在切 class 的瞬间临时注入 `* { transition: none }`，让所有区域**同步瞬变**。同时**移除** `body` 上的 `transition: background-color/color 0.3s`：加了 disableTransitionOnChange 后它在切换时本就不触发（成了死代码），而 header 是 inline var 瞬变、无过渡；留着这条只会在边界情况下重新制造"body 渐变 vs header 瞬变"的不一致。两步合一，保证干净一致（符合"优先一致干净、不要局部渐变动画"的要求，未给各组件补 transition）。
+
+### 关于"不改正文容器宽度"
+
+`app/blog/[slug]/page.tsx` 的 `max-w-[65ch]` **一字未动**。但删除 `.reader article { font-size: 1.125rem }` 有一个隐含效果：`max-w-[65ch]` 的 `ch` 按 `<article>` 自身字号解析，reader 下 article 字号从 18px 回落到 16px（与 light/dark 一致），故 reader 正文**渲染宽度**会从约 585px 收到约 520px，**与另外两个主题对齐**。这不是改 `max-w` 值，而是把原本"reader 比别人宽"的跨主题不一致抹平，方向与本次"三主题统一"一致。若希望 reader 维持更宽，是另一个宽度决策（handoff §6 🟢-2），不在本次。
+
+### 验证方式
+
+- `npx tsc --noEmit`：**绿（exit 0）**。
+- grep 确认无残留：`#8b4513 / #e8e4d9 / #5d4e37 / .reader article / .reader .prose / .reader code / 旧色 EAE5D4 / F5F0DF` 在 css/tsx/ts 中均已无引用（仅剩注释里的历史说明）。
+- ⚠️ **浏览器视觉验证未做**（CSS 渲染需肉眼）：请在 `/` 与 `/blog/hello-world` 连续切 light/dark/reader，确认：无分界线闪现 / reader 底色 `#F4EDD6` / reader 导航·正文链接·"查看全部"无多余下划线 / 三主题正文字号行高一致 / `/blog` 列表 PostCard 未被放大（已通过删 `.reader article` 从根上排除该风险）。
+
+### 遗留问题 / 实施反馈
+
+1. **【资产，需后续处理】reader logo 色差**：`public/logo/logo-read.png` 是按**旧** reader 底色 `#EAE5D4` 烘焙的（三张 logo 已是各自主题变体、md5 不同，非占位图——原注释"同一张占位图"已过时，本轮一并改正）。底色改 `#F4EDD6` 后，logo 边缘柔光可能与新底有**轻微**色差（两者都是暖米色、差异小，header 36px 尺寸下大概率不明显）。代码层修不了 PNG：建议把 logo-read.png 重新导出到 `#F4EDD6` 或改透明背景。已在 `logo.tsx` 注释标注。
+2. **【范围外，未动】**`.reader body { line-height: 1.8 }` 和 `.reader h1,h2,h3 { color }` 不在本次清理清单内，且无害（前者只影响 reader 非正文 UI 行高、后者设的是本就继承到的色），故保留。若日后追求 reader 与其他主题在"非正文 UI"上也完全对齐，可再清。
+3. **body 颜色过渡已移除**：现在切主题是瞬变、无淡入淡出。若产品上更想要"全站统一淡入"的过渡感，应在 `disableTransitionOnChange` 之外另设方案（不在本次目标内）。
+
+### 下一步建议
+
+- 麻烦在浏览器把上面"验证方式"里的视觉项过一遍（尤其 reader logo 色差是否可接受）。需要的话我可以 `nohup pnpm dev` 起本地服务给你点。
+- 资产侧：reader logo 重导出到 `#F4EDD6`（或透明）。
+- 按 TODO 顺序，下一个开发批次是 task7（Model Checker 后端 API）。
+
+## 2026-06-16 (task6 收尾 - reader logo 重导出对齐新底色)
+
+### 本轮目标
+
+收掉上一条 LOG 遗留问题 #1：reader logo 还按旧底色 `#EAE5D4` 烘焙，与新底色 `#F4EDD6` 有潜在色差。用户已重新导出新 logo。
+
+### 修改文件
+
+- `public/logo/logo-read.png`（用 `design/logo-read.png` 覆盖——站点实际 served 的是 public/ 这份）
+- `design/logo-read.png`（用户重新导出的设计源，已在工作区）
+- `components/layout/logo.tsx`（仅注释：去掉 ⚠️ 重导出提醒，标注已对齐 #F4EDD6）
+
+### 完成内容
+
+- 确认 `design/logo-read.png`（md5 `acb4710c…`）为重新烘焙到 `#F4EDD6` 的版本：中间玻璃盘填充由旧的 `#EAE5D4` 暖米改为更亮的 `#F4EDD6`，色散效果保留。
+- 把它复制覆盖到 `public/logo/logo-read.png`（旧 md5 `4213dc9f…` → 新 `acb4710c…`，与 design/ 一致）。**关键**：组件 `<Image src="/logo/logo-read.png">` 只读 public/，光放 design/ 不生效。
+- 更新 `logo.tsx` 注释：logo-read.png 已对齐 `#F4EDD6`，去掉重导出告警。
+
+### 验证方式
+
+- `md5` 确认 design/ 与 public/ 两份一致。
+- 资产替换无类型影响（未改代码逻辑），不必重跑 tsc。
+- ⚠️ 仍建议浏览器在 reader 主题下看一眼 header logo，确认边缘柔光与 `#F4EDD6` 底色无可见色差（首次加载或 logo 有缓存时记得硬刷新）。
+
+### 遗留问题
+
+- 无（上一条 LOG 遗留 #1 已闭环）。light/dark 两张 logo 底色未变、无需动。
+
+### 下一步建议
+
+- task7（Model Checker 后端 API）。
+
+## 2026-06-16 (task6 收尾汇总 + 流程边界说明)
+
+### 本轮目标
+
+task6 全面收尾（不进入 task7）：汇总验证结果、核对 TODO 状态、对照 reviewer 审计确认 🟡 已修、并说明工作区里 architecture/ 文档改动的归属（流程边界）。
+
+### 修改文件
+
+- `doc/ai/develop/TODO.md`（task6 块加"收尾补充"：reviewer 审计结论 + 🟡 修复映射 + 剩余 🟢 项）
+- `doc/ai/develop/LOG.md`（本条）
+- 本轮**未改任何代码 / 资产 / architecture 文档**。
+
+### 验证结果汇总（task6 全部交付）
+
+| 验证项 | 结果 | 来源 |
+|---|---|---|
+| `npx tsc --noEmit` | ✅ 绿（exit 0） | 本会话 developer 跑 |
+| 隔离目录 `pnpm build` | ✅ `/`、`/blog` = `○ (Static)`，`/blog/[slug]` = `● (SSG)` | reviewer 审计 2026-06-16 |
+| client manifest 窄搜 | ✅ `app/page.tsx` / `post-card.tsx` / `lib/content.ts` 未进客户端引用 | reviewer 审计 |
+| grep 旧色/旧选择器残留 | ✅ 无（`#8b4513`/`#e8e4d9`/`#5d4e37`/`.reader article`/`.prose`/`.reader code`/`EAE5D4`/`F5F0DF`） | 本会话 developer 跑 |
+| logo 资产替换 | ✅ `design/logo-read.png` → `public/logo/logo-read.png`，md5 一致（`acb4710c…`） | 本会话 developer 跑 |
+| 浏览器三主题视觉 | ⚠️ **仍未做**（reviewer 本地 Browser 被安全策略拦截；developer 无法看渲染像素） | — |
+
+### reviewer 审计回应（task6 🟡 已闭环）
+
+reviewer 审计（`doc/ai/review/audits/2026-06-16-task6-homepage-recent-writing.md`）结论：无 🔴，1×🟡，2×🟢。
+
+- **🟡 `.reader article` 泄漏到 PostCard** → 已在「2026-06-16 主题样式打磨」修复：删除裸元素选择器 `.reader article, .reader .prose`，正文排版统一迁 `.mdx-body`。**与 reviewer 建议 + 架构师 `blog-reader-theme.md §3.1` 新原则一致**（reader 差异化只 scope 到正文、禁止裸 `article` 选择器）。
+- **🟢-1 PostCard 标题硬编码 h2** → 未做，可推迟（后续加 `headingLevel` prop）。
+- **🟢-2 容器宽度 `max-w-4xl` vs `800px`** → 架构师范围，待统一（developer 仅在 LOG/TODO 记录偏差）。
+
+### 流程边界说明（重要）
+
+工作区中有 3 个 `doc/ai/architecture/` 文件显示为已修改：
+- `decisions/blog-reader-theme.md`（+42，新增 §3.1「`.reader article` 泄漏」+ 扩展 §4/§5 把"禁止裸元素选择器"提为通用原则）
+- `decisions/homepage-design.md`（+32）
+- `handoffs/2026-06-13-path-a.md`（+2，arch3 命名映射注）
+
+**这些均非本 developer 会话所写**——developer 全程只写过 `app/`、`components/`、`lib/`、`mdx-components.tsx`、`public/`、`design/` 以及 `doc/ai/develop/` 下文件。上述 architecture 改动是 **architect 针对 task6 reviewer 审计做的回应**（blog-reader-theme.md 的更新历史明确标了 "2026-06-16 task6 reviewer 发现…交 developer 一并修"）。因此**不存在 developer 越界改 architecture 的情况**；这些改动归 architect 所有，developer 不动、不扩大，留给 architect 自行确认/提交。（按用户要求在此显式记录边界。）
+
+### 其他发现（非 task6，仅记录不处理）
+
+- 工作区有未跟踪目录 `agentecture/`（含 ACTIVITY.md / OPERATING.md / STATE.md / roles / tasks / templates，时间戳 2026-06-16 00:17）。**与本项目 `doc/ai/` 结构无关，疑似其它 agent 脚手架工具的产物**。非 developer 创建、未跟踪，未触碰；提请用户确认是否需要清理。
+
+### 遗留问题
+
+- 浏览器三主题视觉过目（含 reader logo 色差）始终未做——这是 task6 唯一未闭环的验证项，需人工眼过。
+- 🟢-1（heading 层级）、🟢-2（容器宽度，架构师范围）按上文推迟。
+
+### 下一步建议
+
+- task6 可交 reviewer/architect 做最终确认（见对话回复）。
+- 之后按 TODO 顺序进 task7（Model Checker 后端 API）。

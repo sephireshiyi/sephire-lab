@@ -55,8 +55,8 @@
 
 /* Reader theme */
 .reader {
-  --bg-primary: #EAE5D4;
-  --bg-secondary: #F5F0DF;
+  --bg-primary: #F4EDD6;
+  --bg-secondary: #FBF6E4; /* 比 bg-primary 略浅，保持卡片/代码块「抬起」感（随 bg 改为 #F4EDD6 做的必要微调）*/
   --bg-hover: rgba(30, 25, 7, 0.06);
   --text-primary: #1E1907;
   --text-secondary: #5D5D5D;
@@ -68,7 +68,9 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-maven-pro), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* 主题切换统一交给 next-themes 的 disableTransitionOnChange（见 app/layout.tsx）：
+     切换瞬间所有区域同步变色。不在 body 上单独留颜色过渡——否则 header（inline var，瞬变）
+     与 body（0.3s 渐变）速度不一致，切主题时会闪出一条分界线。 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -78,27 +80,10 @@ body {
   line-height: 1.8;
 }
 
-.reader article,
-.reader .prose {
-  max-width: 65ch;
-  font-size: 1.125rem;
-  line-height: 1.8;
-}
-
 .reader h1,
 .reader h2,
 .reader h3 {
   color: var(--text-primary);
-}
-
-.reader a {
-  color: #8b4513;
-  text-decoration: underline;
-}
-
-.reader code {
-  background: #e8e4d9;
-  color: #5d4e37;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -109,7 +94,8 @@ body {
  * ════════════════════════════════════════════════════════════════ */
 
 .mdx-body {
-  line-height: 1.8; /* 长文舒适行高（font-decisions §5 决策 4）*/
+  font-size: 1.125rem; /* 三主题统一的舒适正文字号（原先只有 reader 通过 .reader article 设置，现统一到此）*/
+  line-height: 1.8;    /* 长文舒适行高（font-decisions §5 决策 4）*/
 }
 
 /* 块级元素之间的垂直节奏（首元素无上边距，靠相邻兄弟选择器实现） */
