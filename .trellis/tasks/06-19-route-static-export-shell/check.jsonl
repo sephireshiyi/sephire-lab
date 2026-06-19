@@ -1,0 +1,2 @@
+{"file": ".trellis/tasks/06-18-site-direction-architecture/design.md", "reason": "校验本任务产物是否符合父任务路由边界与静态导出策略"}
+{"file": ".trellis/tasks/06-19-route-static-export-shell/design.md", "reason": "本任务受影响文件清单与跨任务边界裁决，check 时据此确认无越界改动（如首页改版、content/posts 改名）"}

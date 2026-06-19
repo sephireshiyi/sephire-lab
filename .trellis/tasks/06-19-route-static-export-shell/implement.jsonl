@@ -1,0 +1,2 @@
+{"file": ".trellis/tasks/06-18-site-direction-architecture/design.md", "reason": "父任务架构设计：路由边界、静态导出策略、内容模型与全局外壳决策，是本子任务跨任务边界的来源"}
+{"file": ".trellis/tasks/06-18-site-direction-architecture/prd.md", "reason": "父任务已确认的产品决策（/writing 命名、删除 /blog 与 /tools、不做重定向、reader 主题收敛归属任务5），界定本任务取舍"}
