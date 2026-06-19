@@ -47,3 +47,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 2: 06-19 Gallery skeleton pages 实现 Gallery 骨架
+
+**Date**: 2026-06-20
+**Task**: 06-19 Gallery skeleton pages 实现 Gallery 骨架
+**Branch**: `main`
+
+### Summary
+
+实现 /gallery 索引页与 /gallery/[slug] 详情页骨架，消费已校验的 getAllGalleries()/getGalleryBySlug()（lib/gallery.ts）。索引页封面卡片网格，详情页 generateStaticParams + dynamicParams=false 纵向铺开全部照片（用 YAML 真实 width/height），复用 lib/content.ts 的 formatDate，图片用 next/image（项目 Logo 先例，配合 images.unoptimized 静态导出）。验证：主工作区 pnpm lint 通过（未在主工作区 build）；/tmp 副本 pnpm build 成功并生成 out/gallery.html 与 out/gallery/kyoto-autumn.html（含标题与 5 张图）；改坏 YAML date 触发 build 失败（zod Invalid ISO date），证明 build 期校验生效；删除副本。注意 Turbopack build 需关闭命令沙箱。按用户指令在主代理直接实现，未派子代理。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4eb4c95` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
