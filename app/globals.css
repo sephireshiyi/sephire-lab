@@ -3,7 +3,7 @@
 @theme inline {
   --font-sans: var(--font-maven-pro);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-noto-serif-sc), serif;  /* 博客正文宋体；变量在 /blog 子树局部挂载 */
+  --font-serif: var(--font-noto-serif-sc), serif;  /* 文章正文宋体；变量在 /writing 子树局部挂载 */
 }
 
 /*
@@ -53,7 +53,9 @@
   --accent-color: #FFFFFF;
 }
 
-/* Reader theme */
+/* Reader theme
+ * 注意：reader 已不再作为全局主题暴露（ThemeDropdown 只剩 light/dark）。
+ * 以下样式与 logo 的 reader 变体刻意保留，预留给未来「Writing 阅读场景」专项任务复用。 */
 .reader {
   --bg-primary: #F4EDD6;
   --bg-secondary: #FBF6E4; /* 比 bg-primary 略浅，保持卡片/代码块「抬起」感（随 bg 改为 #F4EDD6 做的必要微调）*/
@@ -87,7 +89,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════════════════════
- * 博客正文（MDX）排版 —— 集中在 .mdx-body 作用域
+ * 文章正文（MDX）排版 —— 集中在 .mdx-body 作用域
  * 三主题颜色复用已有的 --text-* / --border-color / --bg-* 变量；
  * 代码块语法色由 Shiki 注入的 --shiki-light/dark/reader 变量驱动。
  * （Tailwind preflight 已清零各元素默认 margin，垂直间距完全由这里控制。）

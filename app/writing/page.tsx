@@ -10,7 +10,7 @@ export default function WritingListPage() {
         className="mb-3xl text-4xl font-bold"
         style={{ color: "var(--text-primary)" }}
       >
-        博客
+        Writing
       </h1>
 
       {posts.length === 0 ? (

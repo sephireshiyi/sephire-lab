@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/layout/logo";
 import { ThemeDropdown } from "@/components/theme/theme-dropdown";
-import { LanguageDropdown } from "@/components/theme/language-dropdown";
 
 export function SiteHeader() {
   return (
@@ -70,10 +69,10 @@ export function SiteHeader() {
             </Link>
           </nav>
 
-          {/* Theme & Language Dropdown - 右侧 */}
+          {/* Theme Dropdown - 右侧。语言切换控件按基础 MVP 决策隐藏（i18n 留作未来任务，
+              组件 components/theme/language-dropdown.tsx 暂保留不挂载）。 */}
           <div className="flex items-center gap-[1.125rem]">
             <ThemeDropdown />
-            <LanguageDropdown />
           </div>
         </div>
       </div>
