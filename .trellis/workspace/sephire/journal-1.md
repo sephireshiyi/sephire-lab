@@ -80,3 +80,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 3: 06-19 route-static-export-shell 完成路由迁移
+
+**Date**: 2026-06-20
+**Task**: 06-19 route-static-export-shell 完成路由迁移
+**Branch**: `main`
+
+### Summary
+
+完成 Writing 路由迁移与静态导出基础。补齐子任务 design.md/implement.md（复杂任务），在主 session 直接实现（一次性例外，架构者偏好不变）：app/blog/*→app/writing/*（含思源宋体子布局），删 app/blog 与 app/tools，新增 app/gallery 占位，导航改 Writing/Music/Gallery/About，PostCard 与首页 href→/writing，metadata 去 online tools，next.config 加 output:export + images.unoptimized。验证在 /tmp 副本（工作区 3000 端口服务依赖其 .next，禁止本地 build）：pnpm build 通过，out/ 生成，Next16 扁平命名 writing.html / writing/hello-world.html，无 /blog /tools 产物。预存 lint 错误 theme-dropdown.tsx 非本任务引入，决定留给任务5。路由代码随 bbb25df 提交。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `bbb25df` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
