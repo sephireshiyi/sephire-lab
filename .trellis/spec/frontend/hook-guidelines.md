@@ -48,4 +48,40 @@ Questions to answer:
 
 <!-- Hook-related mistakes your team has made -->
 
-(To be filled by the team)
+### Don't: client-mounted guard via `setState` inside `useEffect`
+
+**Problem**:
+
+```tsx
+const [mounted, setMounted] = useState(false);
+useEffect(() => {
+  setMounted(true); // ❌ react-hooks/set-state-in-effect (lint error)
+}, []);
+if (!mounted) return null;
+```
+
+The lint rule `react-hooks/set-state-in-effect` (React 19 / React Compiler) treats a
+synchronous `setState` in an effect body as a cascading-render smell and fails the build.
+This pattern commonly appears as a hydration guard for `next-themes` (the resolved theme is
+unknown on the server, so theme-dependent UI must not render until the client mounts).
+
+**Instead**: derive "am I mounted" from `useSyncExternalStore`, whose server snapshot is
+`false` and client snapshot is `true`. This is hydration-safe and passes the lint rule
+without an `eslint-disable`.
+
+```tsx
+import { useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
+function useMounted() {
+  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+}
+
+// in the component:
+const mounted = useMounted();
+if (!mounted) return null;
+```
+
+**Why**: the store never changes after hydration (empty subscribe), so there is no
+post-mount `setState` and no cascading render — the client/server snapshot difference alone
+flips `mounted` to `true` on hydration. See `components/theme/theme-dropdown.tsx`.
