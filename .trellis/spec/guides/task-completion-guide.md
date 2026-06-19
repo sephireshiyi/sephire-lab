@@ -57,6 +57,23 @@ Do not run commands that rebuild or clear `.next` / `out` in the main working di
 - `rm -rf .next`
 - `rm -rf out`
 
+### Gotcha: stale `.next` type errors in the main working directory
+
+Running `pnpm tsc --noEmit` (or any IDE type-check) in the main working
+directory can report errors from `.next/types/validator.ts` for routes that no
+longer exist — e.g. `Type '"/blog"' is not assignable to type 'LayoutRoutes'`
+or `Cannot find module '../../app/tools/page.js'`. These are **false
+positives**: the long-running port-3000 service keeps an outdated `.next`
+(typed routes from before `/blog` and `/tools` were deleted), and we must not
+rebuild `.next` in the main working directory to refresh it.
+
+- Treat such errors as stale-artifact noise as long as none of them point at
+  files you actually changed.
+- The authoritative type-check is the `pnpm build` run in the `/tmp` copy,
+  which regenerates `.next` from scratch (`next build` runs TypeScript there).
+- `pnpm lint` in the main working directory is unaffected and remains a valid
+  local check.
+
 If build/static export verification is needed, use a temporary copy:
 
 ```bash
