@@ -1,0 +1,34 @@
+slug: kyoto-autumn
+title: 京都秋行
+date: "2025-11-12"
+cover: /gallery/kyoto-autumn/01.jpg
+summary: 深秋的京都，从东福寺通天桥到岚山竹林的一日步行，红叶与古寺的光影。
+photos:
+  - src: /gallery/kyoto-autumn/01.jpg
+    width: 1200
+    height: 800
+    alt: 东福寺通天桥俯瞰的红叶
+    caption: 东福寺通天桥
+    note: 从桥上俯瞰溪谷两侧的枫红，是秋行最拥挤也最值的一刻。
+  - src: /gallery/kyoto-autumn/02.jpg
+    width: 800
+    height: 1200
+    alt: 岚山竹林竖向通道
+    caption: 岚山竹林
+    note: 仰拍竹梢，光线被切成细条。
+  - src: /gallery/kyoto-autumn/03.jpg
+    width: 1200
+    height: 800
+    alt: 天龙寺曹源池庭园倒影
+    caption: 天龙寺曹源池
+  - src: /gallery/kyoto-autumn/04.jpg
+    width: 1000
+    height: 1000
+    alt: 石板路与红叶落叶的方形构图
+    caption: 石板小径
+  - src: /gallery/kyoto-autumn/05.jpg
+    width: 1200
+    height: 800
+    alt: 渡月桥黄昏远山
+    caption: 渡月桥黄昏
+    note: 离开前的最后一帧，山色压得很低。

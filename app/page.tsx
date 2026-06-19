@@ -18,8 +18,8 @@ export default function Home() {
         </h1>
       </section>
 
-      {/* Recent Writing 区：下滚后出现。复用 /blog 的 PostCard，
-          容器宽度与 /blog 列表页一致（max-w-[800px]）；py-5xl 比列表页留白更大，
+      {/* Recent Writing 区：下滚后出现。复用 /writing 的 PostCard，
+          容器宽度与 /writing 列表页一致（max-w-[800px]）；py-5xl 比列表页留白更大，
           刻意与上方满屏 Hero 拉开距离。 */}
       <section className="mx-auto max-w-[800px] px-lg py-5xl">
         <h2
@@ -41,7 +41,7 @@ export default function Home() {
 
         <div className="mt-3xl text-center">
           <Link
-            href="/blog"
+            href="/writing"
             className="text-base underline transition-opacity hover:opacity-70"
             style={{ color: "var(--text-primary)" }}
           >

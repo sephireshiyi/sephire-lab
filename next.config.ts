@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
+  // 完整静态导出：产出一组静态 HTML/CSS/JS，可作为纯静态站点部署（无服务器运行时）。
+  output: "export",
+  // 静态导出不带运行时图片优化器；logo 等 next/image 必须关闭优化才能导出。
+  // 这也是后续 Gallery / Music 改用「预先优化好的静态图片」策略的地基。
+  images: { unoptimized: true },
   // 让 .md / .mdx 也能作为页面与可导入模块（与默认的 js/jsx/ts/tsx 并列）
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };

@@ -24,6 +24,6 @@ export const notoSerifSC = Noto_Serif_SC({
 });
 
 // 只挂 Maven Pro + Geist Mono 到全站 <html>。
-// 故意不含 notoSerifSC.variable —— 思源宋体在 app/blog/layout.tsx 局部挂载，
-// 避免非博客页面触发 CJK 字体下载（见 font-decisions §5）。请勿往这里加。
+// 故意不含 notoSerifSC.variable —— 思源宋体在 app/writing/layout.tsx 局部挂载，
+// 避免非文章页面触发 CJK 字体下载（见 font-decisions §5）。请勿往这里加。
 export const fontVariables = `${mavenPro.variable} ${geistMono.variable}`;

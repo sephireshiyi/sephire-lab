@@ -9,8 +9,8 @@ interface PostCardProps {
 
 /**
  * 文章卡片：标题链接 + 日期 + category chip +（可选）摘要。
- * `/blog` 列表页与首页 Recent Writing 区共用，保证两处视觉一致。
- * 样式整体抽自原 `app/blog/page.tsx` 的内联卡片（底部分隔线风格），抽取时未改动。
+ * `/writing` 列表页与首页 Recent Writing 区共用，保证两处视觉一致。
+ * 样式整体抽自原 Writing 列表页的内联卡片（底部分隔线风格），抽取时未改动。
  * 纯展示、无交互，保持 Server Component（不加 "use client"）。
  */
 export function PostCard({ post, showSummary = true }: PostCardProps) {
@@ -19,7 +19,7 @@ export function PostCard({ post, showSummary = true }: PostCardProps) {
       className="border-b pb-2xl"
       style={{ borderColor: "var(--border-color)" }}
     >
-      <Link href={`/blog/${post.slug}`} className="group block">
+      <Link href={`/writing/${post.slug}`} className="group block">
         <h2
           className="text-2xl font-semibold transition-colors group-hover:opacity-70"
           style={{ color: "var(--text-primary)" }}

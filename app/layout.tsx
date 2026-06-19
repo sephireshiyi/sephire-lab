@@ -6,7 +6,7 @@ import { fontVariables } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Sephire Lab",
-  description: "Personal blog, projects, and online tools",
+  description: "Writing, music, and photography by Sephire.",
 };
 
 export default function RootLayout({

@@ -25,7 +25,7 @@ export function SiteHeader() {
           {/* Navigation - 居中 */}
           <nav className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-[3.75rem]">
             <Link
-              href="/blog"
+              href="/writing"
               className="group relative text-xl font-normal transition-opacity hover:opacity-70"
               style={{ color: "var(--text-primary)" }}
             >
@@ -47,11 +47,11 @@ export function SiteHeader() {
               />
             </Link>
             <Link
-              href="/tools"
+              href="/gallery"
               className="group relative text-xl font-normal transition-opacity hover:opacity-70"
               style={{ color: "var(--text-primary)" }}
             >
-              Tools
+              Gallery
               <span
                 className="absolute left-0 right-0 -top-[1.125rem] h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 style={{ backgroundColor: "var(--accent-color)" }}

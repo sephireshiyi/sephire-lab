@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/lib/content";
 import { PostCard } from "@/components/blog/post-card";
 
-export default function BlogListPage() {
+export default function WritingListPage() {
   const posts = getAllPosts(); // 已按日期降序
 
   return (

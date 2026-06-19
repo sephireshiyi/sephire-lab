@@ -62,7 +62,7 @@ export function getPostBySlug(slug: string): Post & { slug: string } {
 
 /**
  * 扫 content/posts/ 读取所有文章的 frontmatter（不编译正文）并按日期降序排序。
- * 供列表页 `/blog` 用——gray-matter 只切 YAML 头，即使有上百篇也很轻。
+ * 供列表页 `/writing` 用——gray-matter 只切 YAML 头，即使有上百篇也很轻。
  */
 export function getAllPosts(): Array<Post & { slug: string }> {
   const slugs = getPostSlugs();
