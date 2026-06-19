@@ -23,6 +23,7 @@ These guides help you **ask the right questions before coding**.
 |-------|---------|-------------|
 | [Code Reuse Thinking Guide](./code-reuse-thinking-guide.md) | Identify patterns and reduce duplication | When you notice repeated patterns |
 | [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md) | Think through data flow across layers | Features spanning multiple layers |
+| [Task Completion Guide](./task-completion-guide.md) | Finish Trellis tasks with scoped verification and commits | Before reporting a child task complete |
 
 ---
 
@@ -64,6 +65,15 @@ These guides help you **ask the right questions before coding**.
 3. **Variable misreading**: Not tracing a variable to its actual definition (e.g., Map keyed by path vs name)
 
 **Verification rule**: Every CRITICAL/WARNING finding must be verified against the actual code before prioritizing. Budget ~35% false-positive rate for AI reviews.
+
+### When Finishing A Trellis Child Task
+
+- [ ] You have run the task's required checks
+- [ ] You have inspected `git status --short` and `git diff --stat`
+- [ ] You know which dirty files belong to the active task
+- [ ] You are ready to create a task-scoped work commit
+
+→ Read [Task Completion Guide](./task-completion-guide.md)
 
 ---
 

@@ -6,6 +6,8 @@
 
 基础 MVP 拆成多个 child tasks，在不同 session 中逐个完成。每个 child task 都应有自己的 `prd.md`，必要时补 `design.md` / `implement.md`，并在实现前通过 `task.py start <child>` 进入 in_progress。
 
+每个 child task 完成并验证后，应按项目级 Trellis 完成规则自动创建任务范围内的 work commit，不需要每个 session 重新口头授权。提交前必须读取并遵守 `.trellis/spec/guides/task-completion-guide.md`；若存在无法确认归属的 dirty files、验证失败或跨任务改动，则停止并询问。
+
 ## 子任务拆分
 
 ### 1. 路由与静态导出基础

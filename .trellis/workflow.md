@@ -224,7 +224,7 @@ Sub-agent dispatch protocol applies to all platforms and all sub-agents, includi
 
 [workflow-state:in_progress]
 Tools: `trellis-implement` / `trellis-research` are sub-agent types only (Task/Agent tool, NOT Skill; there is no skill by these names). `trellis-update-spec` is a skill. `trellis-check` exists as both; prefer the Agent form when verifying after code changes.
-Flow: `trellis-implement` -> `trellis-check` -> `trellis-update-spec` -> commit (Phase 3.4) -> `/trellis:finish-work`.
+Flow: `trellis-implement` -> `trellis-check` -> `trellis-update-spec` -> task-scoped commit per `.trellis/spec/guides/task-completion-guide.md` (Phase 3.4) -> `/trellis:finish-work`.
 Main-session default: dispatch implement/check sub-agents. Sub-agent self-exemption: if already running as `trellis-implement`, do NOT spawn another `trellis-implement` or `trellis-check`; if already running as `trellis-check`, do NOT spawn another `trellis-check` or `trellis-implement`. Dispatch is main session only.
 Dispatch prompt starts with `Active task: <task path from task.py current>`. Read context: jsonl entries -> `prd.md` -> `design.md if present` -> `implement.md if present`.
 [/workflow-state:in_progress]
@@ -235,7 +235,7 @@ Dispatch prompt starts with `Active task: <task path from task.py current>`. Rea
      instead of dispatching sub-agents. -->
 
 [workflow-state:in_progress-inline]
-Flow: `trellis-before-dev` -> edit -> `trellis-check` -> validation -> `trellis-update-spec` -> commit (Phase 3.4) -> `/trellis:finish-work`.
+Flow: `trellis-before-dev` -> edit -> `trellis-check` -> validation -> `trellis-update-spec` -> task-scoped commit per `.trellis/spec/guides/task-completion-guide.md` (Phase 3.4) -> `/trellis:finish-work`.
 Do not dispatch implement/check sub-agents in inline mode.
 Read context: `prd.md` -> `design.md if present` -> `implement.md if present`, plus relevant spec/research loaded by skills.
 [/workflow-state:in_progress-inline]
@@ -593,6 +593,8 @@ Update the docs under `.trellis/spec/` accordingly. Even if the conclusion is "n
 
 The AI drives a batched commit of this task's code changes so `/finish-work` can run cleanly afterwards. Goal: produce work commits FIRST, then bookkeeping (archive + journal) commits land after — never interleaved.
 
+In this project, the user has granted standing approval for task-scoped work commits after implementation and verification. Read `.trellis/spec/guides/task-completion-guide.md` before committing. Do not ask for commit approval again when every dirty file is clearly part of the active task. Stop and ask only when there are unrecognized dirty files, unrelated changes, failed required checks, or a commit grouping ambiguity that cannot be resolved from task artifacts.
+
 **Step-by-step**:
 
 1. **Inspect dirty state**:
@@ -613,7 +615,11 @@ The AI drives a batched commit of this task's code changes so `/finish-work` can
 
 4. **Draft a commit plan**. Group AI-edited files into logical commits (1 commit per coherent change unit, not 1 commit per file). Each entry: `<commit message>` + file list. List unrecognized files separately at the bottom.
 
-5. **Present the plan once, ask for one-shot confirmation**. Format:
+5. **Execute automatically when the plan is fully task-scoped; otherwise ask once**.
+
+   If all dirty files are recognized as active-task work and required checks have passed, run the commit plan without asking for another confirmation.
+
+   If there are unrecognized dirty files, unrelated files, failed required checks, or unresolved grouping ambiguity, present the plan once and ask for one-shot confirmation. Format:
    ```
    Proposed commits (in order):
      1. <message>
@@ -629,7 +635,7 @@ The AI drives a batched commit of this task's code changes so `/finish-work` can
    Reply 'ok' / '行' to execute. Reply with edits, or '我自己来' / 'manual' to abort.
    ```
 
-6. **On confirmation**: run `git add <files>` + `git commit -m "<msg>"` for each batch in order. Do not amend. Do not push.
+6. **Commit**: run `git add <files>` + `git commit -m "<msg>"` for each accepted batch in order. Do not amend. Do not push.
 
 7. **On rejection** (user replies "不行" / "我自己来" / "manual" / any pushback on the plan): stop. Do not attempt a second plan. The user will commit by hand; you skip ahead to 3.5 once they confirm.
 
