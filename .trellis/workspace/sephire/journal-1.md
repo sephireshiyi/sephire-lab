@@ -113,3 +113,36 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 4: YAML 内容模型与种子媒体（Gallery/Music）
+
+**Date**: 2026-06-21
+**Task**: YAML 内容模型与种子媒体（Gallery/Music）
+**Branch**: `main`
+
+### Summary
+
+为 Gallery/Music 建立 YAML 内容源、zod 构建期校验与类型安全 loader。新增 js-yaml + @types/js-yaml 作为显式 YAML 解析依赖（gray-matter 的 engines 未公开类型、matter() 包裹有阅读负担，故选 js-yaml）。新增 lib/yaml.ts（共享 parseYamlFile）、lib/gallery.ts（PhotoSchema/GallerySchema + getGallerySlugs/BySlug/AllGalleries）、lib/music.ts（TrackSchema/MusicSchema + 对应 loader），风格对齐 lib/content.ts。种子内容：1 个照片集 kyoto-autumn（5 张占位 JPEG，尺寸与 YAML 一致）、3 张专辑。验证：Node 24 strip-types + 别名 hook 跑通 loader（含缺字段/themeColor 非法/YAML 语法错三条报错路径）；新文件 lint 干净；/tmp 副本 pnpm build + output:export 通过，out/ 含全部媒体。注：theme-dropdown.tsx 的 set-state-in-effect 既有 lint 报错归属主题清理任务，已由其他窗口在 90c5ca3 记录 client-mount 模式并随 home-about-header 任务归档。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `bbb25df` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
