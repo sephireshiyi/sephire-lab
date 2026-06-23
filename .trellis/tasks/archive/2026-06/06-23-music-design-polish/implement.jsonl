@@ -1,0 +1,3 @@
+{"file": ".trellis/tasks/06-18-site-direction-architecture/design.md", "reason": "父任务架构设计：Music 内容模型、themeColor fading 背景的 Apple Music 意图、静态导出与图片策略边界"}
+{"file": ".trellis/tasks/06-18-site-direction-architecture/prd.md", "reason": "父任务产品决策：Music 索引=专辑墙、详情页左封面+主题色背景+短评、MVP 不播放音频不放假按钮、四模块导航"}
+{"file": ".trellis/tasks/archive/2026-06/06-19-music-skeleton-pages/prd.md", "reason": "Music 骨架任务基线范围：本任务在其产出上打磨，了解骨架已交付什么、哪些是占位待设计稿替换"}

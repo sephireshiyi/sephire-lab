@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/guides/task-completion-guide.md", "reason": "提交规则、staging 约束、/tmp 副本 build 验证流程、commit message 风格、.next stale 类型错误判定"}
+{"file": ".trellis/tasks/06-23-music-design-polish/prd.md", "reason": "本任务验收标准：逐条对照 lint/build/静态导出/无假按钮/tags/不越界等"}
