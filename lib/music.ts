@@ -24,6 +24,7 @@ export const TrackSchema = z.object({
  * - `note`：专辑短评。
  * - `tracks` / `playbackPlaceholder`：可选。`playbackPlaceholder` 是详情页非交互播放占位
  *   的文案/提示，基础 MVP 不放假播放按钮、不接入音频。
+ * - `tags`：可选类型/标签数组，详情页渲染为小标签，索引页不显示。
  *
  * `year` 用整数而非 ISO 日期：专辑以年份为粒度，没有精确到日的产品意义。
  */
@@ -39,6 +40,7 @@ export const MusicSchema = z.object({
   note: z.string(),
   tracks: z.array(TrackSchema).optional(),
   playbackPlaceholder: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 /** 曲目 / 专辑类型，从 zod schema 派生（不要再手写一份 interface）。 */

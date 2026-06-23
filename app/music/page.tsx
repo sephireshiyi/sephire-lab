@@ -16,7 +16,7 @@ export default function MusicPage() {
       </h1>
 
       {/* 专辑墙：封面方块网格，每张专辑链到详情页。 */}
-      <ul className="grid grid-cols-2 gap-lg sm:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-2xl sm:grid-cols-3">
         {albums.map((album) => (
           <li key={album.slug}>
             <Link href={`/music/${album.slug}`} className="block">
@@ -25,16 +25,19 @@ export default function MusicPage() {
               <img
                 src={album.cover}
                 alt={`${album.title} 专辑封面`}
-                className="aspect-square w-full rounded-md object-cover"
+                className="aspect-square w-full rounded-lg object-cover"
                 style={{ backgroundColor: "var(--bg-secondary)" }}
               />
               <p
-                className="mt-sm font-medium"
+                className="mt-md text-sm font-medium"
                 style={{ color: "var(--text-primary)" }}
               >
                 {album.title}
               </p>
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-xs"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 {album.artist} · {album.year}
               </p>
             </Link>

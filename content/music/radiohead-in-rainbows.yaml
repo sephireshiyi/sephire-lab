@@ -5,6 +5,10 @@ year: 2007
 cover: /music/radiohead-in-rainbows/cover.jpg
 themeColor: "#7a1f1f"
 note: 从 Reckoner 到 Videotape，整张专辑像一次缓慢的坠落，温柔却失重。
+tags:
+  - Alternative Rock
+  - Art Rock
+  - Experimental
 tracks:
   - title: 15 Step
     duration: "3:57"
