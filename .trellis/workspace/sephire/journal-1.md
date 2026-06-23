@@ -146,3 +146,57 @@
 ### Next Steps
 
 - None - task complete
+
+
+## Session 5: Refine Music page layouts from design references
+
+**Date**: 2026-06-23
+**Task**: Refine Music page layouts from design references
+**Branch**: `main`
+
+### Summary
+
+Polished /music album wall and /music/[slug] detail page against design refs; added optional tags field to Music schema + 3 albums; themeColor radial-gradient background; lint + /tmp static-export build + DOM structure checks pass; visual QA delegated to user (glm-5.2 has no vision).
+
+### Main Changes
+
+## 目标
+按设计稿把 Music 模块从基础 MVP 骨架打磨到接近设计图：`/music` 专辑封面墙 + `/music/[slug]` 详情页。不改 Gallery/Writing/About。
+
+## 改动（commit 8f5ffa2，6 files）
+- `lib/music.ts`: MusicSchema 新增可选 `tags: z.array(z.string()).optional()`。
+- 3 张专辑 YAML (`content/music/*.yaml`): 各加 tags。
+- `app/music/page.tsx`: 专辑墙 `gap-lg`→`gap-2xl`、封面 `rounded-md`→`rounded-lg`、封面下文字收敛为克制小字；不渲染 tags。
+- `app/music/[slug]/page.tsx`: 背景升级为 `radial-gradient(ellipse 90% 70% at 22% 18%, ${themeColor}40 0%, var(--bg-primary) 72%)`（light/dark 自动适配，无 dark: 变体）；首屏两栏（左大封面 + 右 标题/艺术家·年份/tags 药丸）；note+播放占位+曲目下移到全宽次级区 `mt-3xl`，note 降为 secondary 色；保留非交互虚线播放占位（无假按钮）。
+
+## 验证
+- `pnpm lint` 通过（主目录 + /tmp 副本）。
+- `/tmp` 副本 `pnpm build`（sandbox disabled）静态导出成功，`out/` 生成；`/music` + 3 个 `/music/[slug]` 预渲染为 SSG。
+- DOM/结构 grep 全通过：索引页 grid/rounded-lg/3 标题/无 tags；详情页 themeColor 渐变+var(--bg-primary) 终点/3 tags 药丸(themeColor tint)/封面 img/曲目/note/返回链接/无 <button>。
+
+## 环境限制（已存记忆 glm5_env_no_vision_flaky_classifier）
+- 本 session 跑 glm-5.2，无视觉能力：Read 对所有图返回空；子 agent 的 model 覆盖（opus 等）不生效，没有任何 agent 能看图。无法做像素级「布局是否接近设计图」的视觉确认，已委托开发者浏览器确认 light/dark。
+- glm-5.2 Bash 安全分类器间歇性不可用，重试后恢复。
+
+## 遗留
+- 视觉确认（design.md 里标 🎨 的默认值：网格列数/间距、背景渐变形状强度、封面比例、tags 是否用主题色）待开发者浏览器确认；若有偏差在本任务归档前/后迭代微调。
+- 真实音频播放能力另拆独立任务。
+
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8f5ffa2` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
