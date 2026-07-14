@@ -7,7 +7,7 @@ export function SiteFooter() {
         backgroundColor: 'var(--bg-primary)'
       }}
     >
-      <div className="container mx-auto max-w-6xl px-lg py-xl">
+      <div className="mx-auto max-w-wide px-lg py-xl">
         <div className="flex flex-col items-center justify-between gap-md md:flex-row">
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             © 2026 Sephire Lab. Built with Next.js.

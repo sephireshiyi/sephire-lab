@@ -10,7 +10,7 @@ export function SiteHeader() {
       className="fixed top-0 left-0 right-0 z-50"
       style={{ backgroundColor: "var(--bg-primary)" }}
     >
-      <div className="mx-auto max-w-full px-[4.5rem] py-3xl">
+      <div className="mx-auto max-w-full px-[4.5rem] py-2xl">
         <div className="flex items-center justify-between">
           {/* Logo - 点击回首页 */}
           <Link
@@ -76,6 +76,16 @@ export function SiteHeader() {
           </div>
         </div>
       </div>
+
+      {/* 固定在 Header 下方，让滚入顶部的全站内容逐渐融入当前主题背景。 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-full h-xl"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--bg-primary), transparent)",
+        }}
+      />
     </header>
   );
 }

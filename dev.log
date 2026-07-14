@@ -1,0 +1,125 @@
+
+> shiyi-lab@0.1.0 dev /Users/jiechu/shiyi-lab
+> next dev
+
+▲ Next.js 16.2.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.18.252:3000
+✓ Ready in 352ms
+
+ GET /music 200 in 1774ms (next.js: 1298ms, application-code: 476ms)
+ GET /music 200 in 42ms (next.js: 6ms, application-code: 35ms)
+ GET /music 200 in 161ms (next.js: 39ms, application-code: 122ms)
+ GET /music 200 in 88ms (next.js: 30ms, application-code: 58ms)
+ GET / 200 in 120ms (next.js: 102ms, application-code: 18ms)
+ GET /music 200 in 38ms (next.js: 11ms, application-code: 27ms)
+ GET /gallery 200 in 86ms (next.js: 52ms, application-code: 34ms)
+ GET /about 200 in 58ms (next.js: 42ms, application-code: 16ms)
+ GET /writing 200 in 84ms (next.js: 50ms, application-code: 34ms)
+ GET /music 200 in 24ms (next.js: 5ms, application-code: 19ms)
+ GET /gallery 200 in 36ms (next.js: 10ms, application-code: 26ms)
+ GET /about 200 in 39ms (next.js: 5ms, application-code: 35ms)
+ GET /gallery 200 in 33ms (next.js: 7ms, application-code: 26ms)
+ GET /writing 200 in 30ms (next.js: 4ms, application-code: 26ms)
+ GET /music 200 in 33ms (next.js: 4ms, application-code: 30ms)
+ GET /gallery 200 in 29ms (next.js: 4ms, application-code: 26ms)
+ GET /about 200 in 372ms (next.js: 145ms, application-code: 227ms)
+ GET /gallery 200 in 70ms (next.js: 21ms, application-code: 49ms)
+ GET /gallery/kyoto-autumn 200 in 690ms (next.js: 659ms, generate-params: 479ms, application-code: 31ms)
+ GET /music 200 in 45ms (next.js: 20ms, application-code: 25ms)
+ GET /music 200 in 88ms (next.js: 38ms, application-code: 50ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 709ms (next.js: 684ms, generate-params: 474ms, application-code: 24ms)
+ GET /gallery 200 in 100ms (next.js: 46ms, application-code: 54ms)
+ GET /gallery/kyoto-autumn 200 in 42ms (next.js: 20ms, generate-params: 15ms, application-code: 22ms)
+ GET /writing 200 in 89ms (next.js: 36ms, application-code: 53ms)
+ GET /writing/hello-world 200 in 719ms (next.js: 627ms, generate-params: 482ms, application-code: 92ms)
+ GET /writing 200 in 221ms (next.js: 117ms, application-code: 104ms)
+ GET /gallery 200 in 59ms (next.js: 27ms, application-code: 33ms)
+ GET /music 200 in 57ms (next.js: 15ms, application-code: 42ms)
+ GET /about 200 in 75ms (next.js: 33ms, application-code: 42ms)
+ GET /writing 200 in 35ms (next.js: 8ms, application-code: 26ms)
+ GET / 200 in 143ms (next.js: 74ms, application-code: 69ms)
+ GET /writing 200 in 50ms (next.js: 16ms, application-code: 34ms)
+ GET /writing/hello-world 200 in 48ms (next.js: 21ms, generate-params: 7ms, application-code: 27ms)
+ GET /gallery 200 in 42ms (next.js: 16ms, application-code: 25ms)
+ GET /gallery/kyoto-autumn 200 in 32ms (next.js: 12ms, generate-params: 3ms, application-code: 20ms)
+ GET /about 200 in 42ms (next.js: 15ms, application-code: 27ms)
+ GET /writing 200 in 38ms (next.js: 9ms, application-code: 28ms)
+✓ Compiled in 632ms
+✓ Compiled in 574ms
+ GET /writing 200 in 453ms (next.js: 93ms, application-code: 360ms)
+ GET /writing 200 in 98ms (next.js: 31ms, application-code: 67ms)
+✓ Compiled in 220ms
+ GET /writing 200 in 37ms (next.js: 7ms, application-code: 30ms)
+✓ Compiled in 206ms
+ GET /writing 200 in 40ms (next.js: 6ms, application-code: 34ms)
+ GET /music 200 in 183ms (next.js: 95ms, application-code: 88ms)
+ GET /gallery 200 in 68ms (next.js: 30ms, application-code: 38ms)
+ GET /music 200 in 28ms (next.js: 5ms, application-code: 23ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 64ms (next.js: 38ms, generate-params: 11ms, application-code: 26ms)
+ GET /music/radiohead-in-rainbows 200 in 298ms (next.js: 153ms, generate-params: 42ms, application-code: 145ms)
+ GET /music 200 in 104ms (next.js: 28ms, application-code: 76ms)
+ GET /music 200 in 456ms (next.js: 169ms, application-code: 287ms)
+✓ Compiled in 358ms
+✓ Compiled in 244ms
+✓ Compiled in 72ms
+✓ Compiled in 159ms
+ GET /music 200 in 49ms (next.js: 10ms, application-code: 39ms)
+✓ Compiled in 139ms
+ GET /music 200 in 36ms (next.js: 4ms, application-code: 32ms)
+✓ Compiled in 45ms
+ GET /music 200 in 34ms (next.js: 5ms, application-code: 29ms)
+✓ Compiled in 30ms
+ GET /music 200 in 48ms (next.js: 20ms, application-code: 27ms)
+✓ Compiled in 101ms
+ GET /music 200 in 35ms (next.js: 12ms, application-code: 23ms)
+✓ Compiled in 146ms
+ GET /music/bon-iver-for-emma-forever-ago 200 in 98ms (next.js: 59ms, generate-params: 13ms, application-code: 38ms)
+ GET /music 200 in 52ms (next.js: 20ms, application-code: 32ms)
+ GET /music/radiohead-in-rainbows 200 in 39ms (next.js: 15ms, generate-params: 10ms, application-code: 24ms)
+ GET /music 200 in 36ms (next.js: 10ms, application-code: 26ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 29ms (next.js: 9ms, generate-params: 4ms, application-code: 20ms)
+ GET /music 200 in 78ms (next.js: 33ms, application-code: 45ms)
+✓ Compiled in 203ms
+ GET /music 200 in 40ms (next.js: 12ms, application-code: 28ms)
+✓ Compiled in 180ms
+ GET /music 200 in 47ms (next.js: 9ms, application-code: 38ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 121ms (next.js: 61ms, generate-params: 5ms, application-code: 61ms)
+ GET /music 200 in 453ms (next.js: 166ms, application-code: 288ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 65ms (next.js: 30ms, generate-params: 17ms, application-code: 35ms)
+✓ Compiled in 217ms
+ GET /music/bon-iver-for-emma-forever-ago 200 in 125ms (next.js: 52ms, generate-params: 10ms, application-code: 73ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 153ms (next.js: 36ms, generate-params: 5ms, application-code: 116ms)
+ GET / 200 in 315ms (next.js: 140ms, application-code: 175ms)
+ GET /music 200 in 44ms (next.js: 10ms, application-code: 34ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 31ms (next.js: 15ms, generate-params: 7ms, application-code: 16ms)
+✓ Compiled in 339ms
+ GET /music/bon-iver-for-emma-forever-ago 200 in 151ms (next.js: 49ms, generate-params: 13ms, application-code: 102ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 564ms (next.js: 244ms, generate-params: 53ms, application-code: 320ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 205ms (next.js: 109ms, generate-params: 74ms, application-code: 97ms)
+✓ Compiled in 297ms
+ GET /music/bon-iver-for-emma-forever-ago 200 in 106ms (next.js: 45ms, generate-params: 5ms, application-code: 61ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 63ms (next.js: 18ms, generate-params: 3ms, application-code: 45ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 70ms (next.js: 10ms, generate-params: 1860µs, application-code: 60ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 28ms (next.js: 6ms, generate-params: 1775µs, application-code: 22ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 22ms (next.js: 5ms, generate-params: 2ms, application-code: 17ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 22ms (next.js: 6ms, generate-params: 2ms, application-code: 17ms)
+✓ Compiled in 41ms
+✓ Compiled in 222ms
+ GET /music/bon-iver-for-emma-forever-ago 200 in 131ms (next.js: 53ms, generate-params: 6ms, application-code: 78ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 101ms (next.js: 35ms, generate-params: 8ms, application-code: 66ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 88ms (next.js: 30ms, generate-params: 8ms, application-code: 58ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 44ms (next.js: 8ms, generate-params: 3ms, application-code: 36ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 97ms (next.js: 30ms, generate-params: 6ms, application-code: 67ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 23ms (next.js: 1057µs, generate-params: 13µs, application-code: 22ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 36ms (next.js: 1463µs, generate-params: 13µs, application-code: 35ms)
+✓ Compiled in 276ms
+ GET /writing 200 in 187ms (next.js: 105ms, application-code: 82ms)
+ GET /music 200 in 39ms (next.js: 20ms, application-code: 19ms)
+ GET /music/bon-iver-for-emma-forever-ago 200 in 83ms (next.js: 44ms, generate-params: 8ms, application-code: 40ms)
+ GET /music/radiohead-in-rainbows 200 in 30ms (next.js: 9ms, generate-params: 5ms, application-code: 21ms)
+ GET /music 200 in 25ms (next.js: 4ms, application-code: 22ms)
+ GET /music/daft-punk-discovery 200 in 27ms (next.js: 9ms, generate-params: 4ms, application-code: 18ms)
+ GET /music 200 in 23ms (next.js: 1997µs, application-code: 21ms)
+[?25h
+ ELIFECYCLE  Command failed with exit code 143.

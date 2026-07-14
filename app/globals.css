@@ -24,6 +24,17 @@
   --spacing-5xl: 5rem;     /* 80px */
 }
 
+/* Layout container widths —— 页面级容器宽度，语义命名。
+ * 为何不直接用 max-w-sm/3xl/5xl：Tailwind v4 的 max-w-* 先查 spacing 命名空间，
+ * 本文件上面的 --spacing-sm/3xl/5xl 会把这些内置宽度类劫持成极小值。
+ * 这里另立 --container-* 语义 token（spacing 里没有同名，查找正确落到 container 空间）。 */
+@theme {
+  --container-cover: 24rem;  /* 专辑封面移动端上限（原 max-w-sm 意图） */
+  --container-note:  48rem;  /* 详情页短评/曲目栏（原 max-w-3xl 意图） */
+  --container-page:  64rem;  /* 详情页页面容器（原 max-w-5xl 意图） */
+  --container-wide:  72rem;  /* index / footer 宽容器（原 max-w-6xl 意图） */
+}
+
 /* Layout dimensions（不属于 spacing scale 的一次性尺寸） */
 :root {
   /* 与 site-header 实测高度匹配：py-3xl(48) + 内容(~40) + py-3xl(48) = 136px */
@@ -33,7 +44,7 @@
 /* Light theme (default) */
 :root,
 .light {
-  --bg-primary: #F9F9F9;
+  --bg-primary: #F7F5F1;
   --bg-secondary: #FFFFFF;
   --bg-hover: rgba(0, 0, 0, 0.05);
   --text-primary: #000000;

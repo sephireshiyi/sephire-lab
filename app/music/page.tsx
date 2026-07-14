@@ -7,16 +7,9 @@ export default function MusicPage() {
   const albums = getAllAlbums();
 
   return (
-    <div className="container mx-auto max-w-5xl px-lg py-4xl">
-      <h1
-        className="mb-xl text-4xl font-bold tracking-tight"
-        style={{ color: "var(--text-primary)" }}
-      >
-        Music
-      </h1>
-
-      {/* 专辑墙：封面方块网格，每张专辑链到详情页。 */}
-      <ul className="grid grid-cols-2 gap-2xl sm:grid-cols-3">
+    <div className="mx-auto max-w-wide px-lg py-4xl">
+      {/* 专辑墙：纯封面网格，参考设计图无标题无文字信息。 */}
+      <ul className="grid grid-cols-2 gap-3xl md:grid-cols-3 lg:grid-cols-4">
         {albums.map((album) => (
           <li key={album.slug}>
             <Link href={`/music/${album.slug}`} className="block">
@@ -25,21 +18,9 @@ export default function MusicPage() {
               <img
                 src={album.cover}
                 alt={`${album.title} 专辑封面`}
-                className="aspect-square w-full rounded-lg object-cover"
+                className="aspect-square w-full rounded-lg object-cover transition-transform hover:scale-105"
                 style={{ backgroundColor: "var(--bg-secondary)" }}
               />
-              <p
-                className="mt-md text-sm font-medium"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {album.title}
-              </p>
-              <p
-                className="text-xs"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {album.artist} · {album.year}
-              </p>
             </Link>
           </li>
         ))}

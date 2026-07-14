@@ -23,63 +23,59 @@ export default async function AlbumPage({
 
   return (
     <div
-      // themeColor 背景：封面主题色以左上（大致对齐封面位置）为中心向外淡出到
-      // var(--bg-primary)。用 var(--bg-primary) 作渐变终点让 light/dark 自动适配
-      // （无需 dark: 变体、无需 per-theme alpha）。光晕用 ~25% alpha，不压文字。
+      className="min-h-screen"
       style={{
-        background: `radial-gradient(ellipse 90% 70% at 22% 18%, ${album.themeColor}40 0%, var(--bg-primary) 72%)`,
+        background: `radial-gradient(ellipse 60% 50% at 20% 30%, ${album.themeColor}18 0%, var(--bg-primary) 70%)`,
       }}
     >
-      <div className="container mx-auto max-w-4xl px-lg py-4xl">
+      <div className="mx-auto max-w-page px-lg py-4xl">
         <Link
           href="/music"
-          className="mb-2xl inline-block text-sm"
+          className="mb-3xl inline-block text-sm"
           style={{ color: "var(--text-secondary)" }}
         >
           ← Music
         </Link>
 
-        {/* 首屏：左大封面 + 右核心信息（标题 / 艺术家·年份 / tags）。 */}
-        <div className="flex flex-col gap-2xl sm:flex-row sm:items-start">
+        {/* 首屏：左大封面 + 右核心信息，垂直居中对齐 */}
+        <div className="grid grid-cols-1 items-center gap-3xl md:grid-cols-[2fr_3fr] md:gap-4xl">
           {/* 左侧：专辑封面 */}
-          <div className="w-full sm:w-2/5 sm:flex-shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element --
-                静态导出 + images.unoptimized，封面是预优化静态图，用普通 <img> 即可。 */}
+          <div className="mx-auto w-full max-w-cover md:mx-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={album.cover}
               alt={`${album.title} 专辑封面`}
-              className="aspect-square w-full rounded-lg object-cover"
+              className="aspect-square w-full rounded-lg object-cover shadow-2xl"
               style={{ backgroundColor: "var(--bg-secondary)" }}
             />
           </div>
 
-          {/* 右侧：核心信息（首屏主信息） */}
-          <div className="flex-1">
+          {/* 右侧：核心信息（垂直居中） */}
+          <div className="text-center md:text-left">
             <h1
-              className="text-4xl font-bold tracking-tight"
+              className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl"
               style={{ color: "var(--text-primary)" }}
             >
               {album.title}
             </h1>
             <p
-              className="mt-sm text-lg"
+              className="mt-md text-lg md:text-xl"
               style={{ color: "var(--text-secondary)" }}
             >
-              {album.artist} · {album.year}
+              {album.artist}
             </p>
 
-            {/* tags 标签行：用 themeColor 低 alpha 做底/边，与专辑主题色呼应；
-                文字用 var(--text-primary) 保证 light/dark 可读。索引页不渲染 tags。 */}
+            {/* tags 标签行 */}
             {album.tags && album.tags.length > 0 ? (
-              <ul className="mt-lg flex flex-wrap gap-xs">
+              <ul className="mt-lg flex flex-wrap justify-center gap-xs md:justify-start">
                 {album.tags.map((tag) => (
                   <li
                     key={tag}
-                    className="rounded-full px-sm py-2xs text-xs"
+                    className="rounded-full px-md py-xs text-sm"
                     style={{
-                      border: `1px solid ${album.themeColor}66`,
+                      border: `1px solid ${album.themeColor}40`,
                       color: "var(--text-primary)",
-                      backgroundColor: `${album.themeColor}1a`,
+                      backgroundColor: `${album.themeColor}10`,
                     }}
                   >
                     {tag}
@@ -90,9 +86,8 @@ export default async function AlbumPage({
           </div>
         </div>
 
-        {/* 次级区：note 短评 + 播放占位 + 曲目列表。
-            放到两栏布局之下的全宽次级区，视觉更次级，不压首屏。 */}
-        <div className="mt-3xl">
+        {/* 次级区：note 短评 + 曲目列表 */}
+        <div className="mt-5xl max-w-note">
           <p
             className="text-base leading-relaxed"
             style={{ color: "var(--text-secondary)" }}
@@ -100,21 +95,9 @@ export default async function AlbumPage({
             {album.note}
           </p>
 
-          {/* 非交互播放占位：纯静态视觉，没有可点击但不能播放的假按钮。
-              MVP 不接入音频；最终播放区域视觉等设计稿再做。 */}
-          <div
-            className="mt-xl rounded-md px-md py-md text-sm"
-            style={{
-              border: "1px dashed var(--border-color)",
-              color: "var(--text-secondary)",
-            }}
-          >
-            {album.playbackPlaceholder ?? "音乐片段播放能力将在后续阶段接入"}
-          </div>
-
-          {/* 曲目列表（若有）：纯展示，不做播放计算。 */}
+          {/* 曲目列表（若有） */}
           {album.tracks && album.tracks.length > 0 ? (
-            <ol className="mt-xl flex flex-col gap-xs">
+            <ol className="mt-2xl flex flex-col gap-xs">
               {album.tracks.map((track, index) => (
                 <li
                   key={`${track.title}-${index}`}
