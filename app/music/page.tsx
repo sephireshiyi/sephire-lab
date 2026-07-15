@@ -16,7 +16,7 @@ export default function MusicPage() {
               {/* eslint-disable-next-line @next/next/no-img-element --
                   静态导出 + images.unoptimized，封面是预优化静态图，用普通 <img> 即可。 */}
               <img
-                src={album.cover}
+                src={album.coverUrl}
                 alt={`${album.title} 专辑封面`}
                 className="aspect-square w-full rounded-lg object-cover transition-transform hover:scale-105"
                 style={{ backgroundColor: "var(--bg-secondary)" }}

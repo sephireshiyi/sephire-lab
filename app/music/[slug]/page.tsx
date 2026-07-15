@@ -43,7 +43,7 @@ export default async function AlbumPage({
           <div className="mx-auto w-full max-w-cover md:mx-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={album.cover}
+              src={album.coverUrl}
               alt={`${album.title} 专辑封面`}
               className="aspect-square w-full rounded-lg object-cover shadow-2xl"
               style={{ backgroundColor: "var(--bg-secondary)" }}
@@ -101,25 +101,45 @@ export default async function AlbumPage({
               {album.tracks.map((track, index) => (
                 <li
                   key={`${track.title}-${index}`}
-                  className="flex items-baseline justify-between border-b py-sm text-sm"
+                  className="border-b py-sm text-sm"
                   style={{ borderColor: "var(--border-color)" }}
                 >
-                  <span style={{ color: "var(--text-primary)" }}>
+                  <div className="flex items-baseline justify-between gap-md">
+                    {/* min-w-0 允许 flex 子项收缩到内容宽度以下，truncate 才能生效：
+                        超长曲目名（如 Sufjan）单行截断省略号，不换行、不撑破布局。 */}
                     <span
-                      className="mr-md tabular-nums"
-                      style={{ color: "var(--text-secondary)" }}
+                      className="min-w-0 flex-1 truncate"
+                      style={{ color: "var(--text-primary)" }}
                     >
-                      {index + 1}
+                      <span
+                        className="mr-md tabular-nums"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {index + 1}
+                      </span>
+                      {track.title}
                     </span>
-                    {track.title}
-                  </span>
-                  {track.duration ? (
-                    <span
-                      className="tabular-nums"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      {track.duration}
-                    </span>
+                    {track.duration ? (
+                      /* shrink-0：时长列不参与收缩，长曲名再长也不会把它挤没。 */
+                      <span
+                        className="shrink-0 tabular-nums"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {track.duration}
+                      </span>
+                    ) : null}
+                  </div>
+                  {/* 仅显式声明了 audio 的曲目渲染播放器（loader 派生 audioUrl）。
+                      原生 <audio> 无需 client 端能力，页面保持 server component；
+                      preload="metadata" 只取时长等元信息，不预载音频体；无 autoplay。 */}
+                  {track.audioUrl ? (
+                    <audio
+                      controls
+                      preload="metadata"
+                      src={track.audioUrl}
+                      aria-label={`播放 ${track.title} 片段`}
+                      className="mt-sm w-full"
+                    />
                   ) : null}
                 </li>
               ))}

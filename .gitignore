@@ -20,6 +20,9 @@
 # production
 /build
 
+# generated media (mirrored from content/music/ by scripts/sync-music-media.mjs)
+/public/music/
+
 # misc
 .DS_Store
 *.pem
