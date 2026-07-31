@@ -122,19 +122,19 @@
 
 ## 验收标准
 
-- [ ] `/music` 为 4 列大间距封面墙（桌面端），3 张专辑时居中且排版稳定。
-- [ ] `/music` 封面文字极小克制，封面是绝对主角。
-- [ ] `/music` Light 模式背景接近 `#F7F5F1`，Dark 模式深灰/近黑。
-- [ ] `/music/[slug]` 整页背景渐变增强，呈现 Apple Music 式主题色沉浸感，Light/Dark 都自然适配。
-- [ ] `/music/[slug]` 封面有立体阴影。
-- [ ] `/music/[slug]` 标题字号巨大醒目（桌面端 `text-5xl` 或 `text-6xl`）。
-- [ ] `/music/[slug]` 播放占位极简或移除，不干扰首屏。
-- [ ] tags 标签渲染正确，视觉与主题色呼应。
-- [ ] 导航保持 `Writing | Music | Gallery | About`，未恢复 Tools。
-- [ ] `pnpm lint` 通过。
-- [ ] `/tmp` 副本 `pnpm build` 通过且 `out/` 生成。
-- [ ] 未修改 Gallery / Writing / About；未引入音频/播放器/新依赖。
-- [ ] 开发者在浏览器确认 Light/Dark 模式下 `/music` 和至少一个 `/music/[slug]` 接近设计图。
+- [x] `/music` 为桌面端 4 列大间距封面墙；后续内容任务扩展至 4 张专辑后排版稳定。
+- [x] `/music` 封面文字极小克制，封面是绝对主角。
+- [x] `/music` Light 模式为浅米色背景，Dark 模式为深灰/近黑。
+- [x] `/music/[slug]` 整页主题色渐变在 Light/Dark 下自然适配。
+- [x] `/music/[slug]` 封面有立体阴影。
+- [x] `/music/[slug]` 标题层级醒目且响应式表现稳定；最终字号以浏览器验收版本为准。
+- [x] `/music/[slug]` 原播放占位已移除，不干扰首屏。
+- [x] tags 标签渲染正确，视觉与主题色呼应。
+- [x] 导航保持 `Writing | Music | Gallery | About`，未恢复 Tools。
+- [x] ESLint 通过。
+- [x] `/tmp` 隔离副本静态构建通过且 `out/` 生成。
+- [x] 06-24 实现未修改 Gallery / Writing / About，未引入音频、播放器或新依赖；真实音频由后续 07-15 独立任务接入。
+- [x] 开发者于 2026-07-31 在浏览器确认 Music 页面视觉通过。
 
 ## 后续任务
 

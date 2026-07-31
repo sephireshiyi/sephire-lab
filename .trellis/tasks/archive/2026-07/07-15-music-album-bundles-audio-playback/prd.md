@@ -56,17 +56,17 @@ loader（`lib/music.ts`）改为发现 `content/music/*/album.yaml` 并校验；
 
 ## 验收标准
 
-- [ ] A1 `/music` 从文件夹内 `album.yaml` 发现并展示全部 4 张专辑。
-- [ ] A2 每张专辑详情页能播放其本地 MP3（原生控件，无自动播放）。
-- [ ] A3 无音频专辑 / 无 `audio` 字段的曲目不出现空播放器或报错（用临时去掉 audio 字段或专门样例验证）。
-- [ ] A4 封面与 MP3 存在于静态导出产物（`out/`）并可直接 URL 访问。
-- [ ] A5 非法 / 缺失媒体引用触发指名专辑的校验错误。
-- [ ] A6 超长曲目名（Sufjan 样例）单行截断显示省略号，布局不破。
-- [ ] A7 `pnpm lint` 通过。
-- [ ] A8 build / 静态导出仅在 `/tmp` 副本（排除 `.git`、`node_modules`、`.next`、`out`）运行并通过；禁止在主工作目录 `pnpm build`。
-- [ ] A9 浏览器验证：`/music` 索引、至少两张专辑详情页、移动端宽度、Light/Dark。
-- [ ] A10 完成后经 `trellis-update-spec` 把专辑目录与媒体发布约定写入项目规范。
-- [ ] A11 只提交本任务文件，不推送。
+- [x] A1 `/music` 从文件夹内 `album.yaml` 发现并展示全部 4 张专辑。
+- [x] A2 每张专辑详情页能播放其本地 MP3（原生控件，无自动播放）。
+- [x] A3 无音频专辑 / 无 `audio` 字段的曲目不出现空播放器或报错（用临时去掉 audio 字段验证）。
+- [x] A4 封面与 MP3 存在于静态导出产物（`out/`）并可直接 URL 访问。
+- [x] A5 非法 / 缺失媒体引用触发指名专辑的校验错误。
+- [x] A6 超长曲目名（Sufjan 样例）单行截断显示省略号，布局不破。
+- [x] A7 ESLint 通过。
+- [x] A8 build / 静态导出仅在 `/tmp` 副本（排除 `.git`、`node_modules`、`.next`、`out`）运行并通过；未在主工作目录运行 build。
+- [x] A9 浏览器验证通过：Music 页面视觉与音频交互均由开发者确认。
+- [x] A10 专辑目录与媒体发布约定已写入 `.trellis/spec/frontend/music-content-model.md`。
+- [x] A11 本任务实现提交仅包含任务范围内文件，未推送。
 
 ## 非目标
 

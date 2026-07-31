@@ -59,3 +59,13 @@
 
 - Step 1–3 后可整体 `git checkout` / `git restore --staged` 回滚；用户媒体在 untracked 目录，**禁止 `git clean`**。
 - Step 4 独立可撤：删脚本 + 还原 `package.json` / `.gitignore`。
+
+## 完成记录（2026-07-31）
+
+- 实现提交：`1145530`（`Migrate music to album-bundle folders with local MP3 playback`）。
+- 主工作区 ESLint 通过。
+- 在 `/tmp/shiyi-lab-music-build.jGRHO0` 隔离副本完成静态构建；生成 `/music` 与 4 个专辑详情静态路由，4 个 MP3 均进入 `out/music/<slug>/`。
+- 临时移除 Bon Iver 的 `audio` 字段后重新构建通过，页面未生成空 `<audio>`；其他有音频专辑仍正常生成播放器。
+- 临时把 Bon Iver 音频引用改为 `missing.mp3` 后构建按预期失败，错误同时指明专辑 slug、缺失文件名与原因。
+- 专辑目录与媒体发布规范已同步到 `.trellis/spec/frontend/music-content-model.md`。
+- 开发者已确认最终 Music 页面视觉与音频交互通过。

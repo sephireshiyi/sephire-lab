@@ -223,3 +223,11 @@ python3 ./.trellis/scripts/task.py archive 06-24-music-visual-redesign
 - **单文件回滚**：`git checkout HEAD -- app/music/page.tsx`
 - **全部回滚**：`git reset --hard HEAD`（需确认无其他未提交工作）
 - **迭代修正**：基于开发者反馈调整参数，无需完全回滚。
+
+## 完成记录（2026-07-31）
+
+- 视觉实现提交：`55f67d9`（`adjust album/music layout`）。
+- 当前主工作区 ESLint 通过。
+- 在 `/tmp/shiyi-lab-music-build.jGRHO0` 隔离副本完成静态构建，`out/` 正常生成。
+- 开发者已确认最终 Music 页面视觉通过；实施计划中的早期参数建议与「3 张专辑」描述由最终浏览器验收版本取代。
+- 后续 07-15 任务独立完成专辑目录化与本地 MP3 播放，不改变本任务的视觉验收结论。
