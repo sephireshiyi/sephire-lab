@@ -67,7 +67,9 @@
 
 ### Main Changes
 
-(Add details)
+- Archived `06-24-music-visual-redesign` after developer visual acceptance.
+- Archived `07-15-music-album-bundles-audio-playback` after developer playback acceptance.
+- Reconciled both task acceptance records with the shipped implementation and successor-task scope.
 
 ### Git Commits
 
@@ -77,7 +79,11 @@
 
 ### Testing
 
-- [OK] (Add test results)
+- [OK] ESLint passed in the main workspace.
+- [OK] Isolated `/tmp` static build generated `/music`, four album routes, covers, and four MP3 files.
+- [OK] Removing an `audio` field produced no empty player and did not break the build.
+- [OK] Referencing `missing.mp3` failed the build with the album slug, filename, and actionable reason.
+- [OK] Developer confirmed final Music visuals and audio interaction.
 
 ### Status
 
@@ -232,6 +238,44 @@ Accepted the final Music visual design and local MP3 playback; verified ESLint, 
 ### Testing
 
 - [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
+
+
+## Session 7: Complete global header scroll fade
+
+**Date**: 2026-08-01
+**Task**: Complete global header scroll fade
+**Branch**: `main`
+
+### Summary
+
+Accepted the final h-xl fade and py-2xl header visual decisions; verified the global theme-aware non-blocking CSS overlay, ESLint, and isolated TypeScript check; archived 07-13.
+
+### Main Changes
+
+- Accepted `h-xl` as the final fade distance and `py-2xl` as the final Header height.
+- Verified the fade is supplied globally by the fixed Header using theme-aware CSS.
+- Archived `07-13-global-header-scroll-fade` with its acceptance record updated.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `55f67d9` | (see git log) |
+
+### Testing
+
+- [OK] Developer confirmed the final visual decisions.
+- [OK] Overlay uses `pointer-events-none`, so underlying links and controls remain interactive.
+- [OK] `./node_modules/.bin/eslint .` passed.
+- [OK] TypeScript passed in a temporary source copy excluding stale main-workspace `.next` types.
 
 ### Status
 

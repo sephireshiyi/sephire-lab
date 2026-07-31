@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 6
-- **Last Active**: 2026-07-31
+- **Total Sessions**: 7
+- **Last Active**: 2026-08-01
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~236 | Active |
+| `journal-1.md` | ~275 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 7 | 2026-08-01 | Complete global header scroll fade | `55f67d9` | `main` |
 | 6 | 2026-07-31 | Complete Music visual and local audio tasks | `55f67d9`, `1145530` | `main` |
 | 5 | 2026-06-23 | Refine Music page layouts from design references | `8f5ffa2` | `main` |
 | 4 | 2026-06-21 | YAML 内容模型与种子媒体（Gallery/Music） | `bbb25df` | `main` |
