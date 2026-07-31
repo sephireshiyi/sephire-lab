@@ -163,3 +163,16 @@
 ## 待决策问题
 
 - 暂无阻塞基础 MVP 拆分的产品决策。后续每个 child task 在自己的 session 中按对应 `prd.md` 继续细化并实现。
+
+## 最终集成验收（2026-08-01）
+
+- [x] 9 个 child task 均已完成并归档。
+- [x] 最终路由为 `/`、`/writing`、`/writing/[slug]`、`/gallery`、`/gallery/[slug]`、`/music`、`/music/[slug]`、`/about`；旧 `/blog` 与 `/tools` 不存在。
+- [x] 全局导航为 `Writing`、`Music`、`Gallery`、`About`；全站只暴露 Light/Dark 主题，未挂载全局 Footer。
+- [x] 首页包含四模块入口，About 已从占位页升级为极简说明页，Gallery 种子照片集包含 5 张图片。
+- [x] Music 后续子任务在原 MVP 规划之上完成 4 张专辑目录化与本地 MP3 播放；该扩展经过独立验收，不视为父任务范围漂移。
+- [x] ESLint 通过；隔离副本中的 TypeScript 与 Next 静态构建通过，共生成 14 个静态页面。
+- [x] 静态产物包含 Writing、Gallery、4 个 Music 详情路由及对应 MP3，且不包含 `/blog`、`/tools`。
+- [x] 开发者批准归档父任务。
+
+非阻塞后续：About 中的 `hello@example.com` 与 GitHub 首页仍是内容占位链接，待真实联系方式确定后替换或移除；开发者确认该项不阻塞本父任务归档。Gallery 高保真横向浏览、首页粒子效果等仍按原规划作为未来独立任务处理。
