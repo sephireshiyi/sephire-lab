@@ -28,7 +28,9 @@
 
 ### Main Changes
 
-(Add details)
+- Archived `06-24-music-visual-redesign` after developer visual acceptance.
+- Archived `07-15-music-album-bundles-audio-playback` after developer playback acceptance.
+- Reconciled both task acceptance records with the shipped implementation and successor-task scope.
 
 ### Git Commits
 
@@ -38,7 +40,11 @@
 
 ### Testing
 
-- [OK] (Add test results)
+- [OK] ESLint passed in the main workspace.
+- [OK] Isolated `/tmp` static build generated `/music`, four album routes, covers, and four MP3 files.
+- [OK] Removing an `audio` field produced no empty player and did not break the build.
+- [OK] Referencing `missing.mp3` failed the build with the album slug, filename, and actionable reason.
+- [OK] Developer confirmed final Music visuals and audio interaction.
 
 ### Status
 
@@ -188,6 +194,40 @@ Polished /music album wall and /music/[slug] detail page against design refs; ad
 | Hash | Message |
 |------|---------|
 | `8f5ffa2` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
+
+
+## Session 6: Complete Music visual and local audio tasks
+
+**Date**: 2026-07-31
+**Task**: Complete Music visual and local audio tasks
+**Branch**: `main`
+
+### Summary
+
+Accepted the final Music visual design and local MP3 playback; verified ESLint, isolated static export with four album routes and media, no-audio behavior, and actionable missing-media validation; archived 06-24 and 07-15.
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `55f67d9` | (see git log) |
+| `1145530` | (see git log) |
 
 ### Testing
 
