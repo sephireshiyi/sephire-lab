@@ -88,6 +88,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Gallery 详情页保留原生横向滚动与 scroll snap，只隐藏视觉滚动条。 */
+.gallery-track {
+  scrollbar-width: none;
+}
+
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
 /* Reader mode specific styles */
 .reader body {
   line-height: 1.8;

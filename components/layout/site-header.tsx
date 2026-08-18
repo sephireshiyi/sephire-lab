@@ -2,13 +2,24 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/layout/logo";
+import { useSiteChrome } from "@/components/layout/site-chrome-context";
 import { ThemeDropdown } from "@/components/theme/theme-dropdown";
 
 export function SiteHeader() {
+  const { headerHidden, revealHeader } = useSiteChrome();
+
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50"
-      style={{ backgroundColor: "var(--bg-primary)" }}
+      className="fixed top-0 left-0 right-0 z-50 transition-[transform,opacity] duration-300 ease-out motion-reduce:transition-none"
+      data-site-header-hidden={headerHidden ? "true" : "false"}
+      onFocusCapture={revealHeader}
+      style={{
+        backgroundColor: "var(--bg-primary)",
+        opacity: headerHidden ? 0 : 1,
+        transform: headerHidden
+          ? "translateY(calc(-100% - var(--spacing-xl)))"
+          : "translateY(0)",
+      }}
     >
       <div className="mx-auto max-w-full px-[4.5rem] py-2xl">
         <div className="flex items-center justify-between">

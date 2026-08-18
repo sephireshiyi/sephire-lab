@@ -36,7 +36,7 @@ export const GallerySchema = z.object({
   date: z.iso.date(),
   cover: z.string(),
   summary: z.string(),
-  photos: z.array(PhotoSchema),
+  photos: z.array(PhotoSchema).min(1),
 });
 
 /** 照片 / 照片集类型，从 zod schema 派生（不要再手写一份 interface）。 */
