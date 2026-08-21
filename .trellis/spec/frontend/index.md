@@ -20,6 +20,7 @@ This directory contains guidelines for frontend development. Fill in each file w
 | [State Management](./state-management.md) | Local state, global state, server state | To fill |
 | [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | Partial — layout width tokens |
 | [Type Safety](./type-safety.md) | Type patterns, validation | To fill |
+| [Scroll & Pointer Interaction](./scroll-interaction.md) | Wheel hijacking, trackpad inertia, chrome visibility | Filled |
 | [Music Content Model](./music-content-model.md) | Album-bundle content model + media publishing pipeline | Filled |
 
 ---

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   type CSSProperties,
   type KeyboardEvent,
@@ -15,6 +16,10 @@ import type { Gallery, Photo } from "@/lib/gallery";
 
 const HEADER_REASON = "gallery-browsing";
 const GALLERY_GAP = "clamp(1.5rem, 6vw, 5rem)";
+const WHEEL_PAGE_THRESHOLD = 100;
+const WHEEL_PAGE_COOLDOWN = 250;
+const WHEEL_NOISE_FLOOR = 2;
+const SCROLL_SETTLE_DELAY = 150;
 
 type GalleryExperienceProps = {
   gallery: Gallery;
@@ -50,21 +55,20 @@ function getSpacerStyle(photo: Photo): GallerySpacerStyle {
   };
 }
 
-function normalizeWheelDelta(event: WheelEvent, pageSize: number) {
-  const dominantDelta =
-    Math.abs(event.deltaX) > Math.abs(event.deltaY)
-      ? event.deltaX
-      : event.deltaY;
-
-  if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
-    return dominantDelta * 16;
+function normalizeWheelDelta(
+  delta: number,
+  deltaMode: number,
+  pageSize: number,
+) {
+  if (deltaMode === WheelEvent.DOM_DELTA_LINE) {
+    return delta * 16;
   }
 
-  if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
-    return dominantDelta * pageSize;
+  if (deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+    return delta * pageSize;
   }
 
-  return dominantDelta;
+  return delta;
 }
 
 function getScrollBehavior(): ScrollBehavior {
@@ -85,6 +89,14 @@ export function GalleryExperience({
   const [activeIndex, setActiveIndex] = useState(0);
   const [detailsVisible, setDetailsVisible] = useState(false);
 
+  const activeIndexRef = useRef(activeIndex);
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
+  // 翻页的权威位置：连续翻页基于它推进，避免读到滚动中途的临时索引
+  const targetIndexRef = useRef(0);
+
   const activePhoto = gallery.photos[activeIndex];
 
   const markBrowsing = useCallback(() => {
@@ -103,6 +115,7 @@ export function GalleryExperience({
       );
 
       markBrowsing();
+      targetIndexRef.current = boundedIndex;
       setActiveIndex(boundedIndex);
       slideRefs.current[boundedIndex]?.scrollIntoView({
         behavior: getScrollBehavior(),
@@ -206,6 +219,7 @@ export function GalleryExperience({
     }
 
     let animationFrame = 0;
+    let settleTimer = 0;
 
     const updateActivePhoto = () => {
       animationFrame = 0;
@@ -235,11 +249,17 @@ export function GalleryExperience({
       if (!animationFrame) {
         animationFrame = requestAnimationFrame(updateActivePhoto);
       }
+      // 滚动停稳后把翻页基准同步到实际停靠的照片
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        targetIndexRef.current = activeIndexRef.current;
+      }, SCROLL_SETTLE_DELAY);
     };
 
     track.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       track.removeEventListener("scroll", handleScroll);
+      window.clearTimeout(settleTimer);
       if (animationFrame) {
         cancelAnimationFrame(animationFrame);
       }
@@ -252,32 +272,84 @@ export function GalleryExperience({
       return;
     }
 
+    let accumulatedDelta = 0;
+    let cooldownUntil = 0;
+
     const handleWheel = (event: WheelEvent) => {
       if (event.ctrlKey || detailsVisible) {
         return;
       }
 
-      const delta = normalizeWheelDelta(event, track.clientWidth);
-      if (Math.abs(delta) < 0.5) {
+      const now = performance.now();
+      const deltaX = normalizeWheelDelta(
+        event.deltaX,
+        event.deltaMode,
+        track.clientWidth,
+      );
+      const deltaY = normalizeWheelDelta(
+        event.deltaY,
+        event.deltaMode,
+        track.clientHeight,
+      );
+
+      if (Math.abs(deltaX) <= Math.abs(deltaY)) {
+        // 纵向占主导：向下滚进入文字区，向上滚不拦截
+        if (deltaY <= 0) {
+          return;
+        }
+
+        event.preventDefault();
+        if (now >= cooldownUntil) {
+          accumulatedDelta = 0;
+          cooldownUntil = now + WHEEL_PAGE_COOLDOWN;
+          openDetails();
+        }
         return;
       }
 
+      // 横向翻页：首/末张继续向外划时放行，交给页面默认行为
       const maximumScroll = track.scrollWidth - track.clientWidth;
-      const movingPastStart = delta < 0 && track.scrollLeft <= 1;
-      const movingPastEnd = delta > 0 && track.scrollLeft >= maximumScroll - 1;
+      const movingPastStart = deltaX < 0 && track.scrollLeft <= 1;
+      const movingPastEnd = deltaX > 0 && track.scrollLeft >= maximumScroll - 1;
 
       if (movingPastStart || movingPastEnd) {
         return;
       }
 
       event.preventDefault();
-      markBrowsing();
-      track.scrollBy({ left: delta, behavior: "auto" });
+
+      // 冷却期内吞掉惯性事件；到期后即使同一手势仍在输出也恢复累积，
+      // 使持续快划能按节奏连续翻页，而单次轻扫的惯性尾巴够不到阈值
+      if (now < cooldownUntil) {
+        return;
+      }
+
+      if (Math.abs(deltaX) < WHEEL_NOISE_FLOOR) {
+        return;
+      }
+
+      // 方向反转时重新累积，避免正负抵消或误翻
+      if (
+        accumulatedDelta !== 0 &&
+        Math.sign(deltaX) !== Math.sign(accumulatedDelta)
+      ) {
+        accumulatedDelta = 0;
+      }
+
+      accumulatedDelta += deltaX;
+      if (Math.abs(accumulatedDelta) >= WHEEL_PAGE_THRESHOLD) {
+        const direction = accumulatedDelta > 0 ? 1 : -1;
+        accumulatedDelta = 0;
+        cooldownUntil = now + WHEEL_PAGE_COOLDOWN;
+        goToPhoto(targetIndexRef.current + direction);
+      }
     };
 
     track.addEventListener("wheel", handleWheel, { passive: false });
-    return () => track.removeEventListener("wheel", handleWheel);
-  }, [detailsVisible, markBrowsing]);
+    return () => {
+      track.removeEventListener("wheel", handleWheel);
+    };
+  }, [detailsVisible, goToPhoto, openDetails]);
 
   useEffect(() => {
     const details = detailsRef.current;
@@ -290,6 +362,9 @@ export function GalleryExperience({
         setDetailsVisible(entry.isIntersecting);
         if (entry.isIntersecting) {
           revealHeader();
+        } else {
+          // 滚回照片区即恢复沉浸浏览
+          markBrowsing();
         }
       },
       { threshold: 0.18 },
@@ -297,7 +372,12 @@ export function GalleryExperience({
 
     observer.observe(details);
     return () => observer.disconnect();
-  }, [revealHeader]);
+  }, [markBrowsing, revealHeader]);
+
+  // 挂载后立即隐藏 header，直接进入沉浸浏览
+  useEffect(() => {
+    hideHeader(HEADER_REASON);
+  }, [hideHeader]);
 
   useEffect(() => () => revealHeader(), [revealHeader]);
 
@@ -322,7 +402,7 @@ export function GalleryExperience({
           ref={trackRef}
           aria-label={`${gallery.title}，共 ${gallery.photos.length} 张照片`}
           aria-roledescription="carousel"
-          className="gallery-track flex h-full snap-x snap-mandatory items-center gap-[var(--gallery-gap)] overflow-x-auto overscroll-x-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--accent-color)] motion-reduce:scroll-auto"
+          className="gallery-track flex h-full snap-x snap-mandatory items-center gap-[var(--gallery-gap)] overflow-x-auto overscroll-x-contain focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--accent-color)]"
           onKeyDown={handleKeyDown}
           onTouchEnd={() => {
             touchOriginRef.current = null;
@@ -406,6 +486,16 @@ export function GalleryExperience({
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-[max(var(--spacing-lg),env(safe-area-inset-bottom))] z-10 flex items-center justify-center gap-lg text-xs tracking-[0.14em]">
+          <Link
+            className="pointer-events-auto rounded-full px-sm py-xs transition-opacity hover:opacity-65 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-color)]"
+            href="/gallery"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--bg-primary) 82%, transparent)",
+              color: "var(--text-primary)",
+            }}
+          >
+            ← 影集
+          </Link>
           <span
             aria-live="polite"
             className="rounded-full px-sm py-xs"
@@ -491,14 +581,23 @@ export function GalleryExperience({
           </div>
         )}
 
-        <button
-          className="mt-3xl self-start text-sm tracking-wide transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent-color)]"
-          onClick={returnToGallery}
-          style={{ color: "var(--text-primary)" }}
-          type="button"
-        >
-          返回影集 ↑
-        </button>
+        <div className="mt-3xl flex items-center gap-xl">
+          <button
+            className="text-sm tracking-wide transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent-color)]"
+            onClick={returnToGallery}
+            style={{ color: "var(--text-primary)" }}
+            type="button"
+          >
+            返回影集 ↑
+          </button>
+          <Link
+            className="text-sm tracking-wide transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent-color)]"
+            href="/gallery"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            ← 返回影集列表
+          </Link>
+        </div>
       </section>
     </article>
   );
