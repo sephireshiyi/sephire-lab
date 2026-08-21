@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 9
-- **Last Active**: 2026-08-18
+- **Total Sessions**: 10
+- **Last Active**: 2026-08-21
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~357 | Active |
+| `journal-1.md` | ~390 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 10 | 2026-08-21 | 画廊浏览体验修正：触控板翻页、轴向分流、返回入口与 header 自动隐藏 | `70f7c11` | `main` |
 | 9 | 2026-08-18 | Gallery horizontal experience with photo browsing | `62a2edc` | `main` |
 | 8 | 2026-08-01 | Complete site direction and architecture parent task | `7a3cf40` | `main` |
 | 7 | 2026-08-01 | Complete global header scroll fade | `55f67d9` | `main` |

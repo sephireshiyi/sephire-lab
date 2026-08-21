@@ -355,3 +355,36 @@ Completed Gallery horizontal experience task: implemented snap-scrolling stage w
 ### Next Steps
 
 - None - task complete
+
+
+## Session 10: 画廊浏览体验修正：触控板翻页、轴向分流、返回入口与 header 自动隐藏
+
+**Date**: 2026-08-21
+**Task**: 画廊浏览体验修正：触控板翻页、轴向分流、返回入口与 header 自动隐藏
+**Branch**: `main`
+
+### Summary
+
+修复横向画廊的四类浏览问题。触控板翻页由 raw delta 直推 scrollBy 改为离散翻页：以 targetIndexRef 为权威基准 + 250ms 固定冷却 + 100px 阈值 + 方向反转清零，解决一次划动跳两张、快划卡顿、偶发回退上一张三个缺陷。wheel 事件按轴分流，纵向下划改为滚到文字区而非翻图。返回入口移入底部操作条，与页码、文字按钮构成对称布局。header 改为进入即隐藏，并在从文字区滚回照片区时经 IntersectionObserver else 分支再次自动隐藏。移除轨道上的 CSS scroll-smooth，平滑行为统一由 getScrollBehavior() 显式控制。触控板惯性处理的六条契约已沉淀到 .trellis/spec/frontend/scroll-interaction.md。真机验证通过，/tmp 副本构建通过。
+
+### Main Changes
+
+(Add details)
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `70f7c11` | (see git log) |
+
+### Testing
+
+- [OK] (Add test results)
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- None - task complete
